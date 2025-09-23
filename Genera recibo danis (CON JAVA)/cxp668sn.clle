@@ -1,0 +1,8 @@
+
+             PGM
+             CALL       TAATOOL/SPWLIBLC PARM(P)
+             CALL       PGM(TAATOOL/ADDCPAT2)
+             CALL       PGM(CXP668N) PARM((0 (*DEC 1 0)))
+             ENDPGM
+
+

@@ -1,0 +1,49 @@
+     A
+      *- Nuevo esquema de presentacion de estados contables. *
+      *- Array list
+     A                                      REF(*LIBL/REFERENCIA)
+     A                                      UNIQUE
+     A          R S1TCDF
+     A            S1EMPR    R               REFFLD(EMPR)
+     A            S1SUCU    R               REFFLD(SUCU)
+     A            S1RAMA    R               REFFLD(RAMA)
+     A            S1POLI    R               REFFLD(POLI)
+     A            S1SINI    R               REFFLD(SINI)
+     A            S1NOPS    R               REFFLD(NOPS)
+     A            S1EMPD       100A         COLHDG('EMPRESA DESTINO')
+     A            S1MAIL        50A         COLHDG('EMAIL CARGADO')
+      *Fecha de solicitud.
+     A            S1FESO         8  0       COLHDG('FECHA DE SOLICITUD')
+     A            S1FEMI    R               REFFLD(FER8)
+     A                                      COLHDG('FECHA' 'VIGENCIA' 'DESDE')
+     A            S1VIGD    R               REFFLD(FER8)
+     A                                      COLHDG('FECHA' 'VIGENCIA' 'DESDE')
+     A            S1VIGH    R               REFFLD(FER8)
+     A                                      COLHDG('FECHA' 'VIGENCIA' 'DESDE')
+     A            S1FECS    R               REFFLD(FER8)
+     A                                      COLHDG('FECHA' 'SINIESTRO')
+     A            S1NIVC    R               REFFLD(NIVC)
+     A            S1NIVT    R               REFFLD(NIVT)
+      *
+     A            S1STAT    R               REFFLD(MARP)
+     A                                      COLHDG('ESTADO')
+     A            S1MAR1    R               REFFLD(MARP)
+     A            S1MAR2    R               REFFLD(MARP)
+     A            S1MAR3    R               REFFLD(MARP)
+     A            S1MAR4    R               REFFLD(MARP)
+     A            S1MAR5    R               REFFLD(MARP)
+     A            S1VMOB        15  2       COLHDG('VALOR MANO DE OBRA')
+     A            S1VREP        15  2       COLHDG('VALOR REPUESTOS')
+     A            S1VTOT        15  2       COLHDG('VALOR TOTAL')
+     A            S1VFRA        15  2       COLHDG('VALOR FRANQUICIA')
+     A            S1USER    R        B      REFFLD(USER)
+     A            S1DATE    R        B      REFFLD(FER8)
+     A            S1TIME    R    6  0       REFFLD(TIME)
+      * - -------------------------------- *
+     A          K S1EMPR
+     A          K S1SUCU
+     A          K S1RAMA
+     A          K S1POLI
+     A          K S1SINI
+     A          K S1NOPS
+     A          K S1EMPD

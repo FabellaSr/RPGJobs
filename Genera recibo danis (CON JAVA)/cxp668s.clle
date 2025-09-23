@@ -1,0 +1,29 @@
+/*                                                                    +
+                                                                      +
+  Envío de mail ODP TALL/REP/TERC.                                    +
+                                                                      +
+  30/06/2014 INF1MARC Pedido de desarrollo 3386.                      +
+                                                                      +
+   A partir del CNHOPM envía los mails. Se ejecuta desde la agenda    +
+  del sistema.                                                        +
+                                                                      +
+  01/10/2014 INF1MARC Pedido de desarrollo 3649.                      +
+   Se agrega el envío de mails de Aviso de reposición / baja de suma  +
+  asegurada                                                           +
+                                                                      +
+  19/02/2016 INF1SERG Pedido de desarrollo 4502.                      +
+   Invierto pasos porque el CXP668M cancela siempre desde que se agre-+
+  gó la grabación de GNTMSG y atrasa todo.                            +
+                                                                      +
+  02/07/2024 INF1IVAN Agrego llamada al pgm que genera recibos de     +
+             indemnizacion                                            +
+                                                                      +
+  03/10/2024 INF1IVAN Saco la llamada para recibo de indemnizacion    +
+                      Lo mando a cxp668sn                            */
+
+PGM
+CALL TAATOOL/SPWLIBLC PARM(P)
+call CXP668MI
+call CXP668M
+endpgm
+

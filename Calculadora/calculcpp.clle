@@ -1,0 +1,88 @@
+/* ************************************************************ */
+/*                                                              */
+/* ************************************************************ */
+             PGM        PARM(&NUM1 &NUM2 &CALC &DESDE &SUBMIT)
+/* Parámetros */
+             DCL        VAR(&NUM1)   TYPE(*DEC)  LEN(5 0)
+             DCL        VAR(&NUM2)   TYPE(*DEC)  LEN(5 0)
+             DCL        VAR(&CALC)   TYPE(*CHAR) LEN(1)
+             DCL        VAR(&DESDE)  TYPE(*CHAR) LEN(7)
+             DCL        VAR(&SUBMIT) TYPE(*LGL)
+/* Variables */
+             DCL        VAR(&EMPR)  TYPE(*CHAR) LEN(1)
+             DCL        VAR(&SUCU)  TYPE(*CHAR) LEN(2)
+             DCL        VAR(&DESDN) TYPE(*DEC) LEN(8 0)
+             DCL        VAR(&FECHA) TYPE(*CHAR) LEN(8)
+             DCL        VAR(&FEHOY) TYPE(*DEC) LEN(8 0)
+             DCL        VAR(&DATE)  TYPE(*CHAR) LEN(6)
+             DCL        VAR(&HOY)   TYPE(*CHAR) LEN(8)
+             DCL        VAR(&RESU) TYPE(*DEC) LEN(5 0)
+             DCL        VAR(&JOB) TYPE(*CHAR) LEN(10)
+             DCL        VAR(&FIN)  TYPE(*CHAR) LEN(1)
+/* Variables de error */
+             DCL        VAR(&MSG) TYPE(*CHAR) LEN(100) /* Errores. */
+             DCL        VAR(&ERRORSW) TYPE(*LGL) /* Errores. */
+             DCL        VAR(&MSGID) TYPE(*CHAR) LEN(7) /* Errores. */
+             DCL        VAR(&MSGDTA) TYPE(*CHAR) LEN(100) /* Errores. */
+             DCL        VAR(&MSGF) TYPE(*CHAR) LEN(10) /* Errores. */
+             DCL        VAR(&MSGFLIB) TYPE(*CHAR) LEN(10) /* Errores. */
+             DCL        VAR(&KEYVAR) TYPE(*CHAR) LEN(4) /* Errores. */
+             MONMSG     MSGID(CPF0000) EXEC(GOTO CMDLBL(STDERR1))
+/* Empresa y sucursal */
+             RTVDTAARA  DTAARA(*LDA (401 1)) RTNVAR(&EMPR)
+             RTVDTAARA  DTAARA(*LDA (402 2)) RTNVAR(&SUCU)
+/* Fecha de hoy  dia mes año ... */
+             RTVSYSVAL  SYSVAL(QDATE) RTNVAR(&DATE)
+             CVTDAT     DATE(&DATE) TOVAR(&HOY) FROMFMT(*DMY) +
+                          TOFMT(*YYMD) TOSEP(*NONE)
+             CHGVAR     VAR(&FEHOY) VALUE(&HOY)
+             CHGVAR     VAR(&DESDN) VALUE(&FEHOY)
+/* Fecha HOY  año mes dia ... */
+             IF         COND(&DESDE *NE '0000000') THEN(DO)
+             CVTDAT     DATE(&DESDE) TOVAR(&FECHA) FROMFMT(*CYMD) +
+                          TOFMT(*YYMD) TOSEP(*NONE)
+             CHGVAR     VAR(&DESDN) VALUE(&FECHA)
+             ENDDO
+/* Tipo de operacion */
+/*SUMA*/
+             IF         COND(&CALC = '1') THEN(DO)
+             CHGVAR     VAR(&CALC) VALUE('S')
+             ENDDO
+/*RESTA*/
+             IF         COND(&CALC = '2') THEN(DO)
+             CHGVAR     VAR(&CALC) VALUE('R')
+             ENDDO
+/*PERIMETRO*/
+             IF         COND(&CALC = '5') THEN(DO)
+             CHGVAR     VAR(&CALC) VALUE('P')
+             ENDDO
+             CALL       PGM(CALCULADO) PARM(&NUM1 &NUM2 &CALC +
+                          &DESDN &RESU &FIN)
+             IF         COND(&SUBMIT) THEN(DO)
+             CALL       PGM(*LIBL/PANTCA)
+             ENDDO
+/* */
+
+/* ..................................................................*/
+ STDERR1:       /* Subrutina estándar de manejo de errores */
+             IF         COND(&ERRORSW) THEN(SNDPGMMSG MSGID(CPF9999) +
+                          MSGF(QCPFMSG) MSGTYPE(*ESCAPE)) /* +
+                          Chequeo de función. */
+             CHGVAR     VAR(&ERRORSW) VALUE('1') /* Setea como falla +
+                          si ocurrió un error. */
+ STDERR2:    RCVMSG     MSGTYPE(*DIAG) RMV(*NO) KEYVAR(&KEYVAR) +
+                          MSGDTA(&MSGDTA) MSGID(&MSGID) MSGF(&MSGF) +
+                          SNDMSGFLIB(&MSGFLIB)
+             IF         COND(&KEYVAR *EQ '    ') THEN(GOTO +
+                          CMDLBL(STDERR3))
+             RMVMSG     MSGKEY(&KEYVAR)
+             SNDPGMMSG  MSGID(&MSGID) MSGF(&MSGFLIB/&MSGF) +
+                          MSGDTA(&MSGDTA) MSGTYPE(*DIAG)
+             GOTO       CMDLBL(STDERR2) /* Loop atrás por +
+                          diagnósticos adicionales. */
+ STDERR3:    RCVMSG     MSGTYPE(*EXCP) MSGDTA(&MSGDTA) MSGID(&MSGID) +
+                          MSGF(&MSGF) SNDMSGFLIB(&MSGFLIB)
+             SNDPGMMSG  MSGID(&MSGID) MSGF(&MSGFLIB/&MSGF) +
+                          MSGDTA(&MSGDTA) MSGTYPE(*ESCAPE)
+
+             ENDPGM

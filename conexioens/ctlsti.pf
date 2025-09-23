@@ -1,0 +1,30 @@
+     A                                      REF(REFERENCIA)
+     A                                      UNIQUE(*INCNULL)
+     A          R C1LSTI                    TEXT('Estados de Inspecciones LOG') )
+     A
+     A            C1EMPR    R        B      REFFLD(EMPR)
+     A            C1SUCU    R        B      REFFLD(SUCU)
+     A            C1IDPR        18S 0       TEXT('ID DE PROCESO')
+     A                                      COLHDG('ID' 'DE' 'PROCESO')
+     A            C1SINI    R        B      REFFLD(SINI)
+     A            C1RAMA    R        B      REFFLD(RAMA)
+     A            C1ESTA         1A         TEXT('ESTADO 1=OK, 0=RUN, E=ERR')
+     A                                      COLHDG('ESTADO' 'DE' 'CORRIDA')
+     A            C1CANP        18S 0       TEXT('CANT. REGISTROS PROCESADOS')
+     A                                      COLHDG('REGISTROS' 'PROCESADOS')
+     A            C1CANI        18S 0       TEXT('CANT. REGISTROS INSERTADOS')
+     A                                      COLHDG('REGISTROS' 'INSERTADOS')
+     A            C1OBSV       256A         TEXT('MENSAJE DE ERROR')
+     A                                      COLHDG('MENSAJE' 'DE ' 'ERROR')
+     A            C1CAMP         1A         TEXT('ESTADO INSPECCION')
+     A                                      COLHDG('ESTADO' 'INSPECCION')
+     A            C1CAMI        18S 0       TEXT('CANT. MENSAJES INSERTADOS')
+     A                                      COLHDG('MENSAJES' 'INSERTADOS')
+     A            C1USER    R        B      REFFLD(USER)
+     A            C1DATE    R        B      REFFLD(FER8)
+     A            C1TIME    R    6  0       REFFLD(TIME)
+
+     A          K C1EMPR
+     A          K C1SUCU
+     A          K C1SINI
+

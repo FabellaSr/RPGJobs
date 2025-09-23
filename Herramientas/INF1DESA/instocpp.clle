@@ -1,0 +1,30 @@
+    PGM        PARM(&LIBRARY)
+/* ..................................................................*/
+    DCL        VAR(&LIBRARY)   TYPE(*CHAR) LEN(10)
+    DCL        VAR(&LIBBND)    TYPE(*CHAR) LEN(10)
+/* ..................................................................*/
+    DCL        VAR(&TDEBUG)    TYPE(*CHAR) LEN(10)
+    DCL        VAR(&ERROR)     TYPE(*LGL)  LEN(1) VALUE('0')
+    DCL        VAR(&MSG)       TYPE(*CHAR) LEN(132)
+    DCL        VAR(&FUENTE)    TYPE(*CHAR) LEN(10)
+    DCL        VAR(&DTAARA)    TYPE(*CHAR) LEN(9)
+
+/* ..........Chekeo que la biblioteca de trabajo exista...............*/
+             CHKOBJ     OBJ(&LIBRARY) OBJTYPE(*LIB)
+             MONMSG     MSGID(CPF9801 CPF9810 CPF9812) EXEC(DO)
+             CHGVAR     VAR(&ERROR) VALUE('1')
+             GOTO       CMDLBL(END)
+             ENDDO
+/* .......... Creo obj temporal .......................,..............*/
+
+
+ ARMALISTAB: SPWLIBL
+             ADDLIBLE   LIB(&LIBRARY)
+             MONMSG     MSGID(CPF2103) EXEC(DO)
+             ENDDO
+/* .................................................................*/
+ ERROR:
+             RETURN
+ END:
+
+             ENDPGM

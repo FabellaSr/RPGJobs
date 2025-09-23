@@ -1,0 +1,36 @@
+      ***********************************************************
+      *
+      * Tabla para controlar el envio de RDI.
+      *
+      * 27/06/2024 Ivan80
+      *
+      * desa213
+      ***********************************************************
+     A                                      REF(REFERENCIA)
+     A                                      UNIQUE
+     A          R C1TRDI
+     A            CNEMPR    R               REFFLD(EMPR)
+     A            CNSUCU    R               REFFLD(SUCU)
+     A            CNARTC    R               REFFLD(ARTC)
+     A            CNPACP    R               REFFLD(PACP)
+     A            CNNIVT    R               REFFLD(NIVT)
+     A            CNNIVC    R               REFFLD(NIVC)
+     A            CNSINI    R               REFFLD(SINI)
+     A            CNNOPS    R               REFFLD(NOPS)
+     A            CNCOMA    R               REFFLD(COMA)
+     A            CNNRMA    R               REFFLD(NRMA)
+     A            CNIMAU    R               REFFLD(IMAU)
+     A            CNRAMA    R               REFFLD(RAMA)
+      * Indica el momento en que se generó el registro
+      *  G = Emisión de Orden de Pago
+      *  C = Cancelación de Orden de Pago.
+     A            CNPROC    R               REFFLD(MARP)
+     A                                      TEXT('Procesado o no')
+     A                                      COLHDG('1=Proc.' '0=No Proc.')
+     A            CNMAI1    R               REFFLD(MARP)
+     A                                      TEXT('Falla Mail generación')
+     A                                      COLHDG('Falla Mail' 'Productor')
+     A          K CNEMPR
+     A          K CNSUCU
+     A          K CNARTC
+     A          K CNPACP

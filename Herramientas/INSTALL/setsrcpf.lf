@@ -1,0 +1,6 @@
+                R S1TSRC                    PFILE(SETSRC)
+                K S1EMPR
+                K S1SUCU
+                K S1DESA
+                K S1SECU
+                S S1TIPO                    CMP(EQ 'PF')

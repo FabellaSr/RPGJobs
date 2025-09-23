@@ -1,0 +1,7 @@
+STRPGMEXP SIGNATURE('SVPHER0000000001')
+ export symbol(SVPHER_End)
+ export symbol(SVPHER_Error)
+ export symbol(SVPHER_grabaObjAInst)
+
+
+endpgmexp

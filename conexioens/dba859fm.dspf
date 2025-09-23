@@ -1,0 +1,135 @@
+     A*%%TS  SD  20250905  152141  INF1IVAN    REL-V7R5M0  5770-WDS
+     A*%%EC
+     A*%%FD Renovacion: Intermediarios que no se renuevan
+     A                                      DSPSIZ(24 80 *DS3)
+     A                                      REF(*LIBL/REFERENCIA REFER)
+     A          R DBA859S1                  SFL
+     A*%%TS  SD  20250904  143959  INF1IVAN    REL-V7R5M0  5770-WDS
+     A            X1OPCI         1Y 0B  6  1EDTCDE(Z)
+     A            X1SINI    R        O  6 17REFFLD(REFER/SINI *LIBL/REFERENCIA)
+     A            X1NIVC    R        O  6 25REFFLD(NIVC)
+     A            X1ESTA        10A  O  6 32
+     A            X1RAMA    R        O  6  3REFFLD(RAMA)
+     A            X1POLI    R        O  6  8REFFLD(POLI)
+     A          R DBA859C1                  SFLCTL(DBA859S1)
+     A*%%TS  SD  20250904  182958  INF1IVAN    REL-V7R5M0  5770-WDS
+     A                                      SFLSIZ(0009)
+     A                                      SFLPAG(0009)
+     A                                      WINDOW(2 12 16 41)
+     A                                      CF03(03)
+     A                                      CF06
+     A                                      PAGEUP(27)
+     A                                      PAGEDOWN(28)
+     A                                      VLDCMDKEY(29)
+     A                                      CF07(07)
+     A                                      OVERLAY
+     A  30                                  SFLDSP
+     A  31                                  SFLDSPCTL
+     A N30                                  SFLCLR
+     A  32                                  SFLEND(*MORE)
+     A                                  4 17'Nro.Sin'
+     A                                      DSPATR(UL)
+     A                                      COLOR(BLU)
+     A                                  4 25'N.Prod'
+     A                                      DSPATR(UL)
+     A                                      COLOR(BLU)
+     A                                  4 32'Estado'
+     A                                      DSPATR(UL)
+     A                                      COLOR(BLU)
+     A                                  1  1'Envio de carta de franquicia...'
+     A                                      DSPATR(UL)
+     A                                      COLOR(BLU)
+     A                                  2  1'2 = Editar'
+     A                                  3  1'F7 = Pend/DispWeb'
+     A            XXSINI    R     Y  I  5 17REFFLD(REFER/SINI *LIBL/REFERENCIA)
+     A                                      COLOR(WHT)
+     A            XXNIVC    R     Y  I  5 25REFFLD(REFER/NIVC *LIBL/REFERENCIA)
+     A                                      COLOR(WHT)
+     A                                  4  3'Rama'
+     A                                      COLOR(BLU)
+     A                                      DSPATR(UL)
+     A                                  4  8'Poliza'
+     A                                      DSPATR(UL)
+     A                                      COLOR(BLU)
+     A            POLI      R     Y  I  5  8COLOR(WHT)
+     A            RAMA      R     Y  I  5  3COLOR(WHT)
+     A          R DBA859CA
+     A*%%TS  DD  20120502  201930  INF1LEOP    REL-V5.0.1  WDSc
+     A                                      ASSUME
+     A                                      OVERLAY
+     A                                  1  4' '
+     A          R DBA859CD
+     A*%%TS  SD  20250905  151649  INF1IVAN    REL-V7R5M0  5770-WDS
+     A                                      WINDOW(1 12 20 40)
+     A                                      CA12(12)
+     A                                      CA01(01)
+     A                                  1  2'Envio de carta de franquicia...'
+     A                                      DSPATR(UL)
+     A                                      COLOR(BLU)
+     A                                  2  2'Datos de la solicitud'
+     A                                      DSPATR(UL)
+     A                                      COLOR(BLU)
+     A                                  5  3'Rama........:'
+     A                                  6  3'Poliza......:'
+     A                                  7  3'Vigencia D..:'
+     A                                  8  3'Vigencia H..:'
+     A                                  9  3'Siniestro...:'
+     A                                 10  3'Fecha Sini..:'
+     A                                 11  3'T.Productor.:'
+     A                                 12  3'C.Productor.:'
+     A                                 13  3'Valores'
+     A                                      COLOR(WHT)
+     A                                      DSPATR(UL)
+     A                                 14  3'Mano de obra:'
+     A                                 15  3'Repuestos...:'
+     A                                 16  3'Total.......:'
+     A                                 17  3'Franquicia..:'
+     A                                 18  3'Neto........:'
+     A                                  4  3'Emision'
+     A                                      COLOR(WHT)
+     A                                      DSPATR(UL)
+     A            XDRAMA    R        O  5 17REFFLD(REFER/RAMA *LIBL/REFERENCIA)
+     A                                      COLOR(WHT)
+     A            XDPOLI    R        O  6 17REFFLD(REFER/POLI *LIBL/REFERENCIA)
+     A                                      COLOR(WHT)
+     A            XDVIGD    R        O  7 17REFFLD(REFER/FER8 *LIBL/REFERENCIA)
+     A                                      COLOR(WHT)
+     A            XDVIGH    R        O  8 17REFFLD(REFER/FER8 *LIBL/REFERENCIA)
+     A                                      COLOR(WHT)
+     A            XDSINI    R        O  9 17REFFLD(REFER/SINI *LIBL/REFERENCIA)
+     A                                      COLOR(WHT)
+     A            XDNIVT    R        O 11 17REFFLD(REFER/NIVT *LIBL/REFERENCIA)
+     A                                      COLOR(WHT)
+     A            XDNIVC    R        O 12 17REFFLD(REFER/NIVC *LIBL/REFERENCIA)
+     A                                      COLOR(WHT)
+     A            XDFECS    R        O 10 17REFFLD(REFER/FER8 *LIBL/REFERENCIA)
+     A                                      COLOR(WHT)
+     A            XDMENS        15A  B 19 17DSPATR(PR)
+     A N51                                  DSPATR(ND)
+     A            XDTOTA        18A  B 16 17DSPATR(PR)
+     A                                      COLOR(WHT)
+     A            XDFRAN        18A  B 17 17DSPATR(PR)
+     A                                      COLOR(WHT)
+     A            XDNETO        18A  B 18 17DSPATR(PR)
+     A                                      COLOR(WHT)
+     A            XDMANO        18A  B 14 17
+     A  54                                  DSPATR(PR)
+     A            XDREPU        18A  B 15 17
+     A  54                                  DSPATR(PR)
+     A          R DBA859MSG
+     A*%%TS  SD  20250905  152141  INF1IVAN    REL-V7R5M0  5770-WDS
+     A                                      WINDOW(1 12 10 40)
+     A                                      CA01(01)
+     A                                      CA12(12)
+     A                                  1  1'Envio de carta de franquicia...'
+     A                                      COLOR(BLU)
+     A                                  2  1'Datos de la solicitud '
+     A                                      COLOR(BLU)
+     A                                  4  2'Atencion!'
+     A                                      DSPATR(BL)
+     A            XMENSG        35A  B  5  2DSPATR(PR)
+     A                                  8  2'F1=Continuar'
+     A                                  8 16'F12=Atras'
+     A            XMENSG2       35A  B  6  2
+     A  55                                  DSPATR(ND)
+     A                                      DSPATR(PR)

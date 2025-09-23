@@ -1,0 +1,22 @@
+                                            REF(REFERENCIA)
+                                            UNIQUE
+                R SITINS
+                  SIEMPR    R               REFFLD(EMPR)
+                  SISUCU    R               REFFLD(SUCU)
+
+                  SIINST        10A         COLHDG('INSTALACION')
+                  SIDETA        50A         COLHDG('DETALLE')
+                  SISECU    R               REFFLD(SECU)
+                  SIAUSU    R               REFFLD(AUSU)
+                  SIDATE    R               REFFLD(DATE)
+                  SITIME    R               REFFLD(TIME)
+                  SIANIO    R               REFFLD(FERA)
+                  SIFMES    R               REFFLD(FERM)
+                  SIFDIA    R               REFFLD(FERD)
+                  SIECH1    R               REFFLD(FER8)
+                                            COLHDG('FECHA INSTAL')
+
+                K SIEMPR
+                K SISUCU
+                K SIINST
+                K SISECU

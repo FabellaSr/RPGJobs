@@ -1,0 +1,19 @@
+/* **************************************************************** */
+/*                                                                  */
+/* ---------------------------------------------------------------- */
+/*                                                                  */
+/* **************************************************************** */
+             PGM        PARM(&TSBS)
+
+             DCL        VAR(&TSBS) TYPE(*DEC) LEN(2 0)
+             DCL        VAR(&MSG) TYPE(*CHAR) LEN(132)
+
+ GENEDICMD:  ?          GENEDICMD
+
+             MONMSG     MSGID(CPF0000) EXEC(DO)
+             RCVMSG     MSGTYPE(*EXCP) MSG(&MSG)
+             SNDPGMMSG  MSG(&MSG) MSGTYPE(*COMP)
+             ENDDO
+
+             RETURN
+             ENDPGM

@@ -1,0 +1,56 @@
+     A*%%TS  SD  20241223  141227  INF1IVAN    REL-V7R5M0  5770-WDS
+     A*%%EC
+     A                                      DSPSIZ(24 80 *DS3)
+     A                                      REF(*LIBL/REFERENCIA REFER)
+     A          R CRTMSCA
+     A*%%TS  SD  20241205  141523  INF1IVAN    REL-V7R5M0  5770-WDS
+     A                                      KEEP
+     A                                      ASSUME
+     A                                      OVERLAY
+     A                                  8  4' '
+     A          R CRTMSS1                   SFL
+     A*%%TS  SD  20241223  000012  INF1IVAN    REL-V7R5M0  5770-WDS
+     A                                      SFLNXTCHG
+     A            XERROR        45A  B  4  4DSPATR(HI)
+     A                                      DSPATR(PR)
+     A                                      COLOR(RED)
+     A            XCONTA         1A  O  4  1DSPATR(HI)
+     A                                      COLOR(RED)
+     A          R CRTMSC1                   SFLCTL(CRTMSS1)
+     A*%%TS  SD  20241223  141227  INF1IVAN    REL-V7R5M0  5770-WDS
+     A                                      SFLSIZ(0008)
+     A                                      SFLPAG(0008)
+     A                                      WINDOW(3 21 15 50)
+     A                                      CF12
+     A                                      PAGEUP(27)
+     A                                      PAGEDOWN(28)
+     A                                      VLDCMDKEY(29)
+     A                                      OVERLAY
+     A  30                                  SFLDSP
+     A  31                                  SFLDSPCTL
+     A N30                                  SFLCLR
+     A  32                                  SFLEND(*MORE)
+     A                                  1 41'F12=Volver'
+     A                                      DSPATR(UL)
+     A                                      DSPATR(HI)
+     A                                      COLOR(PNK)
+     A                                  1  1'Resultado de la operacion:        -
+     A                                           '
+     A                                      DSPATR(UL)
+     A                                      COLOR(BLU)
+     A  33        FLD001         1A  B  3 38DSPATR(ND)
+     A          R CRTMSNE
+     A*%%TS  SD  20241222  225510  INF1IVAN    REL-V7R5M0  5770-WDS
+     A                                      CF12
+     A                                      OVERLAY
+     A                                      WINDOW(CRTMSC1)
+     A          R CRTMSCER
+     A*%%TS  SD  20241223  130352  INF1IVAN    REL-V7R5M0  5770-WDS
+     A                                      WINDOW(5 25 5 35)
+     A                                  1  1'Error'
+     A                                  1  7':'
+     A                                  2  8'No'
+     A                                  2 11'se'
+     A                                  2 14'encontro'
+     A                                  2 23'la'
+     A                                  2 26'biblioteca'

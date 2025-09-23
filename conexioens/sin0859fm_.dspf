@@ -1,0 +1,45 @@
+     A*%%TS  SD  20250903  180731  INF1IVAN    REL-V7R5M0  5770-WDS
+     A*%%EC
+     A                                      DSPSIZ(24 80 *DS3)
+     A                                      PRINT
+     A                                      INDARA
+     A                                      CF03(03)
+     A                                      CF05(05)
+     A                                      CF06(06)
+     A                                      CF12(12)
+     A          R SFL01                     SFL
+     A            OPT            1A  B  6  2
+     A            S1RAMA         3S 0O  6  6
+     A            S1SINI         7S 0O  6 11
+     A            TIPOPR         1S 0O  6 20
+     A            CODPRD        10S 0O  6 27
+     A            ESTADO        20A  O  6 40
+
+     A          R SFL01C                    SFLCTL(SFL01)
+     A                                      SFLSIZ(9999) SFLPAG(12)
+     A                                      OVERLAY
+     A                                      SFLDSP SFLDSPCTL
+     A            RRNP           5S 0H
+     A            S1CNT          5S 0O  4 68
+     A                                  2  2'Rama'
+     A                                  2  8'Siniestro'
+     A                                  2 18'Tipo Prod.'
+     A                                  2 29'Cod. Prod.'
+     A                                  2 42'Estado'
+     A                                  3  2'2=Editar valores'
+     A            SFLPOS         4S 0H
+     A            S1OPTEN       10A  H
+
+     A          R WEDIT
+     A*%%TS  SD  20250903  180731  INF1IVAN    REL-V7R5M0  5770-WDS
+     A                                      OVERLAY
+     A                                      WINDOW(5 14 15 52)
+     A            E_SINI         7S 0O  5 18
+     A            E_RAMA         3S 0O  6 18
+     A            E_VMOB        15S 2B  7 18
+     A            E_VREP        15S 2B  8 18
+     A                                  5  6'Siniestro:'
+     A                                  6  6'Rama.....:'
+     A                                  7  6'Mano Obra:'
+     A                                  8  6'Repuestos:'
+     A                                  4  6'Edición de valores'

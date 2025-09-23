@@ -1,0 +1,12 @@
+             PGM        PARM()
+/* Variables */
+             DCL        VAR(&MSG) TYPE(*CHAR) LEN(132)
+
+             ?          INSTALCMD
+
+             MONMSG     MSGID(CPF0000) EXEC(DO)
+             RCVMSG     MSGTYPE(*EXCP) MSG(&MSG)
+             SNDPGMMSG  MSG(&MSG) MSGTYPE(*COMP)
+             ENDDO
+
+ FINAL:      ENDPGM

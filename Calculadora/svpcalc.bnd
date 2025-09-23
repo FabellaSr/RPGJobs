@@ -1,0 +1,8 @@
+STRPGMEXP SIGNATURE('SVPCALC0000000001')
+ export symbol(SVPCALC_End)
+ export symbol(SVPCALC_suma)
+ export symbol(SVPCALC_sumaV1)
+ export symbol(SVPCALC_multi)
+ export symbol(SVPCALC_perimetroRect)
+ export symbol(SVPCALC_marcar)
+endpgmexp

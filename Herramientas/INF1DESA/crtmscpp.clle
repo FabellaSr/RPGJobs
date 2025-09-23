@@ -1,0 +1,119 @@
+    PGM        PARM(&LIBRARY &OBJMOD &SRCMOD &DEBUG &LIBBND)
+/* ..................................................................*/
+    DCL        VAR(&LIBRARY)   TYPE(*CHAR) LEN(10)
+    DCL        VAR(&OBJMOD)    TYPE(*CHAR) LEN(10)
+    DCL        VAR(&SRCMOD)    TYPE(*CHAR) LEN(10)
+    DCL        VAR(&DEBUG)     TYPE(*CHAR) LEN(3)
+    DCL        VAR(&LIBBND)    TYPE(*CHAR) LEN(10)
+/* ..................................................................*/
+    DCL        VAR(&TDEBUG)    TYPE(*CHAR) LEN(10)
+    DCL        VAR(&ERRORL)    TYPE(*LGL)  LEN(1) VALUE('0')
+    DCL        VAR(&ERROR)     TYPE(*LGL)  LEN(1) VALUE('0')
+    DCL        VAR(&ERROR1)    TYPE(*LGL)  LEN(1) VALUE('0')
+    DCL        VAR(&ERROR2)    TYPE(*LGL)  LEN(1) VALUE('0')
+    DCL        VAR(&MSG)       TYPE(*CHAR) LEN(132)
+    DCL        VAR(&FUENTE)    TYPE(*CHAR) LEN(10)
+    DCL        VAR(&DTAARA)    TYPE(*CHAR) LEN(9)
+    CHGVAR     VAR(&FUENTE)    VALUE(&OBJMOD|< '_H' )
+    CHGVAR     VAR(&DTAARA)    VALUE('DTAERROR')
+
+
+/* ..........Chekeo que la biblioteca de trabajo exista...............*/
+             CHKOBJ     OBJ(&LIBRARY) OBJTYPE(*LIB)
+             MONMSG     MSGID(CPF9801 CPF9810 CPF9812) EXEC(DO)
+             CHGVAR     VAR(&ERRORL) VALUE('1')
+             GOTO       CMDLBL(END)
+             ENDDO
+/* ..........DTAARA  para control de errores....,,,,,,,..............*/
+             CRTDTAARA  DTAARA(&LIBRARY/&DTAARA) TYPE(*CHAR) LEN(7) VALUE('0000000')
+             MONMSG     MSGID(CPF1023) EXEC(DO)
+             CHGDTAARA  DTAARA(&LIBRARY/&DTAARA (1 7)) VALUE('0000000')
+             ENDDO
+/* ..........Chekeo que el contenedor de fuentes exista..............*/
+             CHKOBJ     OBJ(&LIBRARY/&SRCMOD) OBJTYPE(*FILE)
+             MONMSG     MSGID(CPF9801 CPF9810 CPF9812) EXEC(DO)
+             CHGVAR     VAR(&ERROR) VALUE('1')
+             CHGDTAARA  DTAARA(&LIBRARY/&DTAARA (1 1)) VALUE('1')
+             ENDDO
+/* ..........Chekeo que la biblioteca donde esta el _H exista........*/
+             CHKOBJ     OBJ(&LIBBND) OBJTYPE(*LIB)
+             MONMSG     MSGID(CPF9801 CPF9810 CPF9812) EXEC(DO)
+             CHGVAR     VAR(&ERROR) VALUE('1')
+             CHGDTAARA  DTAARA(&LIBRARY/&DTAARA (2 1)) VALUE('1')
+             ENDDO
+/* ..........Chekeo que el fuente a compilar exista...................*/
+             RTVMBRD    FILE(&LIBRARY/&SRCMOD) MBR(&OBJMOD)
+             MONMSG     MSGID(CPF9815 CPF9810 CPF9812) EXEC(DO)
+             CHGVAR     VAR(&ERROR) VALUE('1')
+             CHGDTAARA  DTAARA(&LIBRARY/&DTAARA (3 1)) VALUE('1')
+             ENDDO
+/* ..........Chekeo que el fuente _H exista...........................*/
+             RTVMBRD    FILE(&LIBBND/QCPYBOOKS) MBR(&FUENTE)
+             MONMSG     MSGID(CPF9815 CPF9810 CPF9812) EXEC(DO)
+             CHGVAR     VAR(&ERROR) VALUE('1')
+             CHGDTAARA  DTAARA(&LIBRARY/&DTAARA (4 1)) VALUE('1')
+             ENDDO
+/* ..........Chekeo que el fuente BND exista...........................*/
+             RTVMBRD    FILE(&LIBBND/QSRVSRC) MBR(&OBJMOD)
+             MONMSG     MSGID(CPF9815 CPF9810 CPF9812) EXEC(DO)
+             CHGVAR     VAR(&ERROR) VALUE('1')
+             CHGDTAARA  DTAARA(&LIBRARY/&DTAARA (5 1)) VALUE('1')
+             ENDDO
+/* .....................Chekeos.......................................*/
+
+             CHGVAR     VAR(&TDEBUG) VALUE('*NONE')
+             IF         COND(&DEBUG *EQ '*SI') THEN(DO)
+             CHGVAR     VAR(&TDEBUG) VALUE('*SOURCE')
+             ENDDO
+
+ CREAR:      IF         COND(&ERROR *EQ '0') THEN(DO)
+             GOTO       CMDLBL(ARMALISTAB)
+             ENDDO
+ ERRORES:    IF         COND(&ERROR *EQ '1') THEN(DO)
+             CHGDTAARA  DTAARA(&LIBRARY/&DTAARA (6 1)) VALUE('1')
+             CHGDTAARA  DTAARA(&LIBRARY/&DTAARA (7 1)) VALUE('1')
+             GOTO       CMDLBL(END)
+             ENDDO
+ ARMALISTAB: SPWLIBL
+             ADDLIBLE   LIB(&LIBRARY)
+             MONMSG     MSGID(CPF2103) EXEC(DO)
+             GOTO       CMDLBL(CRTMOD)
+             ENDDO
+/* ..................................................................*/
+ CRTMOD:     CRTRPGMOD  MODULE(&LIBRARY/&OBJMOD) +
+                          SRCFILE(&LIBRARY/&SRCMOD) OPTION(*EVENTF) +
+                          DBGVIEW(&TDEBUG)
+             MONMSG     MSGID(RNS9309) EXEC(DO)
+             CHGVAR     VAR(&ERROR1) VALUE('1')
+             CHGDTAARA  DTAARA(&LIBRARY/&DTAARA (6 1)) VALUE('1')
+             GOTO       CMDLBL(END)
+             ENDDO
+/* CRTRPGMOD MODULE(DESA1509/SVPDTS) SRCFILE(DESA1509/QDESA1509)    */
+/*          OPTION(*EVENTF) DBGVIEW(*SOURCE) TGTRLS(*CURRENT)       */
+/* .................................................................*/
+ CRTSVPGM:   CRTSRVPGM  SRVPGM(&LIBRARY/&OBJMOD) +
+                          SRCFILE(&LIBBND/QSRVSRC) +
+                          BNDDIR(HDIILE/HDIBDIR) OPTION(*DUPPROC)
+             MONMSG     MSGID(CPF5D05) EXEC(DO)
+             CHGVAR     VAR(&ERROR2) VALUE('1')
+             CHGDTAARA  DTAARA(&LIBRARY/&DTAARA (7 1)) VALUE('1')
+             GOTO       CMDLBL(END)
+             ENDDO
+             DLTOBJ     OBJ(&LIBRARY/&OBJMOD) OBJTYPE(*MODULE)
+/* CRTSRVPGM SRVPGM(DESA1509/SVPDTS) SRCFILE(DESA1509/QSRVSRC)      */
+/*           BNDDIR(HDIILE/HDIBDIR) OPTION(*DUPPROC)                */
+/* .................................................................*/
+
+ END:
+             IF         COND(&ERRORL *EQ '1') THEN(DO)
+             CALL       PGM(CRTMSC) PARM(&LIBRARY &OBJMOD &ERRORL)
+             RETURN
+             ENDDO
+             ADDLIBLE   LIB(&LIBRARY) POSITION(*FIRST)
+             MONMSG     MSGID(CPF2103) EXEC(DO)
+             RMVLIBLE   LIB(&LIBRARY)
+             ADDLIBLE   LIB(&LIBRARY) POSITION(*FIRST)
+             ENDDO
+             CALL       PGM(CRTMSC) PARM(&LIBRARY &OBJMOD &ERRORL)
+             DLTDTAARA  DTAARA(&LIBRARY/&DTAARA)
+             ENDPGM

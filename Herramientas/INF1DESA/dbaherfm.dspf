@@ -1,0 +1,89 @@
+     A*%%TS  SD  20250107  150959  INF1IVAN    REL-V7R5M0  5770-WDS
+     A*%%EC
+     A*%%FD Tipos de representanteso se renuevan
+     A                                      DSPSIZ(24 80 *DS3)
+     A                                      REF(*LIBL/REFERENCIA REFER)
+     A          R DBAHERS1                  SFL
+     A*%%TS  SD  20250107  150959  INF1IVAN    REL-V7R5M0  5770-WDS
+     A            X1OPCI         1Y 0B  6  1EDTCDE(Z)
+     A            X1CCMD        10A  B  6  3DSPATR(PR)
+     A                                      COLOR(BLU)
+     A            X1DCMD        35A  B  6 15DSPATR(PR)
+     A                                      DSPATR(HI)
+     A                                      COLOR(WHT)
+     A            X1LCMD        10A  B  7 15DSPATR(PR)
+     A                                      COLOR(BLU)
+     A          R DBAHERC1                  SFLCTL(DBAHERS1)
+     A*%%TS  SD  20250103  123636  INF1IVAN    REL-V7R5M0  5770-WDS
+     A                                      SFLSIZ(0020)
+     A                                      SFLPAG(0005)
+     A                                      WINDOW(2 12 18 51)
+     A                                      CF03
+     A                                      CF06
+     A                                      PAGEUP(27)
+     A                                      PAGEDOWN(28)
+     A                                      VLDCMDKEY(29)
+     A                                      OVERLAY
+     A  30                                  SFLDSP
+     A  31                                  SFLDSPCTL
+     A N30                                  SFLCLR
+     A  32                                  SFLEND(*MORE)
+     A                                  1  1'Herramientas de desa   '
+     A                                      DSPATR(UL)
+     A                                  3 12'F6=Alta'
+     A                                  2 43'F3=Salir'
+     A                                  3 20'4=Baja'
+     A                                  3  1'1=Ejecutar'
+     A                                  3 27'2=Modificacion'
+     A                                  5  3'Comando.:'
+     A                                      DSPATR(UL)
+     A                                  5 14'Biblioteca del cmd.:'
+     A                                      DSPATR(UL)
+     A          R DBAHERNE
+     A*%%TS  SD  20241226  095949  INF1IVAN    REL-V7R5M0  5770-WDS
+     A                                      WINDOW(2 12 18 51)
+     A                                      CF03
+     A                                      CF06
+     A                                      OVERLAY
+     A                                  1  1'Herramientas de desa   '
+     A                                      DSPATR(UL)
+     A                                  3  1'4=Bajas'
+     A                                  3 19'F6=Altas'
+     A                                  3 39'F3=Salir'
+     A                                  5  1'Herramientas Utiles    '
+     A                                      DSPATR(UL)
+     A                                      DSPATR(HI)
+     A                                 11  5'(No hay tipos de representantes ca-
+     A                                      rgadas aún-)'
+     A          R DBAHERCA
+     A*%%TS  SD  20241226  141232  INF1IVAN    REL-V7R5M0  5770-WDS
+     A                                      ASSUME
+     A                                      OVERLAY
+     A                                  1  4' '
+     A          R DBAHER01
+     A*%%TS  SD  20241226  142942  INF1IVAN    REL-V7R5M0  5770-WDS
+     A                                      WINDOW(2 12 18 51)
+     A                                      CF12
+     A                                      CF01
+     A                                      OVERLAY
+     A                                  1  1'Herramientas de desa   '
+     A                                      DSPATR(UL)
+     A            X2FUNC        11A  O  3 41DSPATR(RI)
+     A  50 51                               ERRMSG('Ya existe el registro para -
+     A                                      Alta.')
+     A                                 15  1'F1=Concretar'
+     A                                 15 42'F12=Volver'
+     A*%%GP NUEVO      01
+     A            X2DCMD        50A  B  8  2
+     A  51                                  DSPATR(PR)
+     A                                  5  2'Comando...'
+     A                                      DSPATR(HI)
+     A                                  7  2'Descripcion del comando...'
+     A                                      DSPATR(HI)
+     A                                  9  2'Bibioteca de ejecucion ...'
+     A                                      DSPATR(HI)
+     A            X2CMDC        10A  B  6  2
+     A  51                                  DSPATR(PR)
+     A            X2LCMD        10A  B 10  2
+     A  51                                  DSPATR(PR)
+     A*%%IN prueba      5051

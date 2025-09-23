@@ -1,0 +1,11 @@
+PGM
+
+             DCL        VAR(&IDPR) TYPE(*dec) LEN(10 0)
+
+/* Obtener Estados */
+/* Para JDBC                              */
+CALL PGM(TAATOOL/ADDCFNE1)
+ CHGVAR VAR(&IDPR) VALUE(138)
+ CALL  PGM(STR021) PARM((&IDPR))
+
+ENDPGM

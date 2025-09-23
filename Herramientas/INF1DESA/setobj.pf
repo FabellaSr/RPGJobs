@@ -1,0 +1,19 @@
+                                            REF(REFERENCIA)
+                                            UNIQUE
+                R O1JETO
+                  O1EMPR    R               REFFLD(EMPR)
+                  O1SUCU    R               REFFLD(SUCU)
+                  O1AUSU    R               REFFLD(AUSU)
+                  O1PSEC    R               REFFLD(PSEC)
+                  O1OBJN        10A         COLHDG('OBJETO')
+                  O1OBJT        10A         COLHDG('TIPO')
+                  O1BIBL        10A         COLHDG('BIBLIOTECA')
+                  O1INST        10A         COLHDG('INSTALACION')
+                  O1MARP    R               REFFLD(MARP)
+                                            COLHDG('ESTADO')
+                  O1DATE    R               REFFLD(DATE)
+                K O1EMPR
+                K O1SUCU
+                K O1AUSU
+                K O1INST
+                K O1OBJN

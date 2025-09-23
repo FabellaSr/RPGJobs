@@ -1,0 +1,42 @@
+    PGM        PARM(&PECCMD &PELCMD &PERTNR)
+/* ..................................................................*/
+    DCL        VAR(&PECCMD)   TYPE(*CHAR) LEN(10)
+    DCL        VAR(&PELCMD)   TYPE(*CHAR) LEN(10)
+    DCL        VAR(&PERTNR)   TYPE(*CHAR) LEN(1)
+/* ..................................................................*/
+             CHGVAR     VAR(&PERTNR) VALUE('0')
+/* ..........Chekeo que la biblioteca de trabajo exista...............*/
+             CHKOBJ     OBJ(&PELCMD) OBJTYPE(*LIB)
+             MONMSG     MSGID(CPF9801 CPF9810 CPF9812) EXEC(DO)
+             CHGVAR     VAR(&PERTNR) VALUE('1')
+             GOTO       CMDLBL(END)
+             ENDDO
+/* ..........Chekeo que el OBJETO cmd exista..........................*/
+             CHKOBJ     OBJ(&PELCMD/&PECCMD) OBJTYPE(*PGM)
+             MONMSG     MSGID(CPF9801 CPF9810 CPF9812) EXEC(DO)
+             CHGVAR     VAR(&PERTNR) VALUE('2')
+             GOTO       CMDLBL(END)
+             ENDDO
+/* .....................Chekeos.......................................*/
+ CREAR:      IF         COND(&PERTNR *EQ '0') THEN(DO)
+             GOTO       CMDLBL(ARMALISTAB)
+             ENDDO
+ ERRORES:    IF         COND(&PERTNR *EQ '1') THEN(DO)
+             CHGVAR     VAR(&PERTNR) VALUE(&PERTNR)
+             GOTO       CMDLBL(END)
+             ENDDO
+ ARMALISTAB: SPWLIBL
+             ADDLIBLE   LIB(&PELCMD)
+             MONMSG     MSGID(CPF2103) EXEC(DO)
+             ENDDO
+ END:
+             IF         COND(&PERTNR *EQ '0') THEN(DO)
+             ADDLIBLE   LIB(&PELCMD) POSITION(*FIRST)
+             MONMSG     MSGID(CPF2103) EXEC(DO)
+             RMVLIBLE   LIB(&PELCMD)
+             ADDLIBLE   LIB(&PELCMD) POSITION(*FIRST)
+             ENDDO
+             CALL       PGM(&PECCMD)
+             ENDDO
+
+             ENDPGM

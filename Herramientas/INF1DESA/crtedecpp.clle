@@ -1,0 +1,34 @@
+/* **************************************************************** */
+/* CREAR BIBLIOTECA CON ARCHIVOS SRCF PARA NUEVOS DESARROLLOS       */
+/* ---------------------------------------------------------------- */
+    PGM        PARM(&LIBRARY &NOMBRE)
+    DCL        VAR(&LIBRARY) TYPE(*CHAR) LEN(10)
+    DCL        VAR(&NOMBRE)  TYPE(*CHAR) LEN(50)
+    DCL        VAR(&ERROR)   TYPE(*LGL) LEN(1) VALUE('0')
+    DCL        VAR(&AUXSRC)  TYPE(*CHAR) LEN(10)
+/* ..........Chekeo que la biblioteca de trabajo NO exista..........*/
+    CRTLIB     LIB(&LIBRARY) TEXT(&NOMBRE)
+    MONMSG     MSGID(CPF0001 CPF2111) EXEC(DO)
+    CHGVAR     VAR(&ERROR) VALUE('1')
+    ENDDO
+
+                /* Verificar si ocurrió un error */
+    IF         COND(&ERROR *EQ '1') THEN(GOTO CMDLBL(END))
+    CRTSRCPF   FILE(&LIBRARY/QFUENTES)  RCDLEN(112) TEXT('Fuente general')
+    CRTSRCPF   FILE(&LIBRARY/QGCTAALL)  RCDLEN(112) TEXT('Fuente de tablas')
+    CRTSRCPF   FILE(&LIBRARY/QCPYBOOKS) RCDLEN(112) TEXT('Fuente de copybooks')
+    CRTSRCPF   FILE(&LIBRARY/QSRVSRC)   RCDLEN(112) TEXT('Fuente de servicios')
+    CRTSRCPF   FILE(&LIBRARY/QEJEMPLOS) RCDLEN(112) TEXT('Fuentes Ejemplos')
+    CRTSRCPF   FILE(&LIBRARY/QSRWRAP)   RCDLEN(112) TEXT('Fuentes WRAPERs')
+    CHGVAR     VAR(&AUXSRC) VALUE('Q' || &LIBRARY)
+    CRTSRCPF   FILE(&LIBRARY/&AUXSRC)  RCDLEN(112) TEXT(&NOMBRE)
+
+                /* Notificar éxito al usuario */
+    SNDPGMMSG  MSG('La biblioteca y los archivos fuente creados exitosamente.') MSGTYPE(*INFO)
+
+    END:
+        IF         COND(&ERROR *EQ '1') THEN(DO)
+        SNDPGMMSG  MSG('La biblioteca ya existe. Proceso +
+                detenido.') MSGTYPE(*INFO)
+        ENDDO
+    ENDPGM

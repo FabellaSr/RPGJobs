@@ -1,0 +1,27 @@
+/* **************************************************************** */
+/* ---------------------------------------------------------------- */
+    PGM        PARM(&LIBRARY &QDESAIN)
+    DCL        VAR(&LIBRARY) TYPE(*CHAR) LEN(10)
+    DCL        VAR(&QDESAIN) TYPE(*CHAR) LEN(10)
+    DCL        VAR(&RTRN)    TYPE(*CHAR) LEN(1)
+    DCL        VAR(&AUXSRC)  TYPE(*CHAR) LEN(10)
+/* ..........Chekeo que la biblioteca de trabajo exista...............*/
+             CHKOBJ     OBJ(&LIBRARY) OBJTYPE(*LIB)
+             MONMSG     MSGID(CPF9801 CPF9810 CPF9812) EXEC(DO)
+             CHGVAR     VAR(&RTRN) VALUE('1')
+             GOTO       CMDLBL(END)
+             ENDDO
+/* ..........Chekeo que el contenedor de fuentes exista..............*/
+             CHKOBJ     OBJ(&LIBRARY/&QDESAIN) OBJTYPE(*FILE)
+             MONMSG     MSGID(CPF9801 CPF9810 CPF9812) EXEC(DO)
+             CHGVAR     VAR(&RTRN) VALUE('1')
+             GOTO       CMDLBL(END)
+             ENDDO
+             GENDETINS FILE(&LIBRARY/&QDESAIN)
+
+    END:
+        IF         COND(&RTRN  *EQ '1') THEN(DO)
+             SNDPGMMSG  MSG('La biblioteca o el contenedor de +
+                          fuentes no existe') MSGTYPE(*INFO)
+        ENDDO
+    ENDPGM

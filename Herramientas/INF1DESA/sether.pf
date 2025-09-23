@@ -1,0 +1,14 @@
+                                            REF(REFERENCIA)
+                                            UNIQUE
+                R H1RRAM
+                  H1EMPR    R               REFFLD(EMPR)
+                  H1SUCU    R               REFFLD(SUCU)
+                  H1NCMD    R               REFFLD(MARP)
+                  H1CCMD        10A         COLHDG('COMANDO CMD')
+                  H1LCMD        10A         COLHDG('BIBLIOTECA')
+                  H1DCMD        35A         COLHDG('DES. CMD')
+                K H1EMPR
+                K H1SUCU
+                K H1NCMD
+                K H1CCMD
+                K H1DCMD

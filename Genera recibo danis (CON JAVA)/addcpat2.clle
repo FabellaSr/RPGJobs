@@ -1,0 +1,23 @@
+/* ----------------------------------------------------------------- +
+   Este programa prepara el entorno para trabajar con las clases Java+
+   para el armado de Recibos de Siniestros por daños totales         +
+                                                                     +
+   Sergio Fernandez                      *24-Jun-2024                +
+------------------------------------------------------------------- */
+PGM
+
+    ADDENVVAR  ENVVAR(CLASSPATH) +
+                VALUE('/javahdi/itext/itextpdf-5.5.3.jar:/h+
+                ome/ReciboDanioTotal/ReciboDanioTotal.jar') +
+                          REPLACE(*YES)
+
+    ADDENVVAR ENVVAR(QIBM_RPG_JAVA_PROPERTIES) +
+               VALUE('-Djava.awt.headless=true;+
+                   -Dos400.awt.native=true;') +
+               REPLACE(*YES)
+
+    ADDENVVAR ENVVAR(JAVA_HOME) +
+               VALUE('/QOpenSys/QIBM/ProdData/JavaVM/jdk80/32bit') +
+               REPLACE(*YES)
+
+ENDPGM

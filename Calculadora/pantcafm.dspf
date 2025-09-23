@@ -1,0 +1,129 @@
+     A*%%TS  SD  20250506  124336  INF1IVAN    REL-V7R5M0  5770-WDS
+     A*  91/08/26  16:06:56    SAHR        REL-R03M00  5728-PW1
+     A*-------------------------------------------------------------------------
+     A*%%EC
+     A                                      DSPSIZ(24 80 *DS3)
+     A                                      REF(*LIBL/REFERENCIA REFER)
+     A                                      PRINT
+     A                                      CHECK(AB)
+     A                                      CA03
+     A                                      HELP
+     A*  91/08/23  11:13:34    SAHR        REL-R03M00  5728-PW1
+     A          R PANTCACA
+     A*%%TS  SD  20250421  161922  INF1IVAN    REL-V7R5M0  5770-WDS
+     A                                      TEXT('Cabecera')
+     A                                  1  2'PANTCA'
+     A            XXIDEN         1S 0O  1 10
+     A                                  1 13USER
+     A                                  1 26'        HDI SEGUROS        '
+     A                                      DSPATR(RI)
+     A                                  1 62DATE
+     A                                      EDTCDE(Y)
+     A                                  1 72TIME
+     A                                  2  2'                                 C-
+     A                                      alculador                          -
+     A                                               '
+     A                                      DSPATR(UL)
+     A*  91/08/26  16:06:56    SAHR        REL-R03M00  5728-PW1
+     A          R PANTCAS1                  SFL
+     A*%%TS  SD  20250506  124336  INF1IVAN    REL-V7R5M0  5770-WDS
+     A                                      TEXT('SUBFILE 1')
+     A            XXIN43         1A  H
+     A            XXDOMI        35A  H
+     A            X1OPCI         1Y 0B  8  2CHGINPDFT
+     A                                      TEXT('OPCIONES')
+     A                                      DSPATR(HI)
+     A                                      EDTCDE(Z)
+     A                                      CHECK(ER)
+     A N49                                  DSPATR(UL)
+     A  49                                  DSPATR(PR)
+     A                                      VALUES(0 1 2 4 5 7 8 9 6 3)
+     A            X1FECC    R     Y  B  8 44REFFLD(FER8)
+     A                                      DSPATR(PR)
+     A            X1FECA    R     Y  B  8 54REFFLD(FERA)
+     A                                      DSPATR(PR)
+     A            X1FECM    R     Y  B  8 59REFFLD(FERM)
+     A                                      DSPATR(PR)
+     A            X1FDIA    R     Y  B  8 62REFFLD(FERD)
+     A                                      DSPATR(PR)
+     A            X1NUM1    R     Y  B  8  5REFFLD(REFER/NUME *LIBL/REFERENCIA)
+     A                                      DSPATR(PR)
+     A            X1NUM2    R     Y  B  8 13REFFLD(REFER/NUME *LIBL/REFERENCIA)
+     A                                      DSPATR(PR)
+     A            X1CALC        10A  B  8 21DSPATR(PR)
+     A            X1RESU    R     Y  B  8 33REFFLD(REFER/NUME *LIBL/REFERENCIA)
+     A                                      DSPATR(PR)
+     A                                      COLOR(BLU)
+     A            X1ESTA        10A  B  8 66
+     A  60                                  COLOR(RED)
+     A            X1SECU    R     Y  B  8 40REFFLD(REFER/SECU *LIBL/REFERENCIA)
+     A                                      DSPATR(PR)
+     A*  91/08/23  14:04:54    SAHR        REL-R03M00  5728-PW1
+     A          R PANTCAC1                  SFLCTL(PANTCAS1)
+     A*%%TS  SD  20250423  154223  INF1IVAN    REL-V7R5M0  5770-WDS
+     A                                      SFLSIZ(0012)
+     A                                      SFLPAG(0012)
+     A                                      TEXT('SUBFILE CONTROL 1')
+     A                                      CF05
+     A                                      CF06
+     A                                      CF09
+     A                                      CF17
+     A  31                                  ROLLUP(22)
+     A  31                                  ROLLDOWN(23)
+     A                                      VLDCMDKEY(90)
+     A                                      KEEP
+     A                                      BLINK
+     A                                      OVERLAY
+     A  31                                  SFLDSP
+     A  30                                  SFLDSPCTL
+     A N30                                  SFLDLT
+     A  31                              5 41'8=Cadena'
+     A N41                                  DSPATR(ND)
+     A                                  6  2'O'
+     A                                      DSPATR(RI)
+     A                                  4  2'1-Marcar'
+     A                                  6  4'Numero1'
+     A                                      DSPATR(RI)
+     A                                  6 12'Numero2'
+     A                                      DSPATR(RI)
+     A                                  6 21'Calculo   '
+     A                                      DSPATR(RI)
+     A                                  6 66'Marca'
+     A                                      DSPATR(RI)
+     A                                  6 44'FechaYMD'
+     A                                      DSPATR(RI)
+     A                                  6 54'Año'
+     A                                      DSPATR(RI)
+     A                                  6 58'Mes'
+     A                                      DSPATR(RI)
+     A                                  6 62'Dia'
+     A                                      DSPATR(RI)
+     A                                  6 33'Resul'
+     A                                      DSPATR(RI)
+     A                                  6 40'Se.'
+     A                                      DSPATR(RI)
+     A*  91/08/26  09:32:39    SAHR        REL-R03M00  5728-PW1
+     A          R PANTCA01
+     A*%%TS  SD  20250331  143119  INF1IVAN    REL-V7R5M0  5770-WDS
+     A                                      VLDCMDKEY(90)
+     A                                      BLINK
+     A                                      OVERLAY
+     A                                 13 19'(No existen registros a visualizar-
+     A                                      )'
+     A*  91/08/26  11:20:53    SAHR        REL-R03M00  5728-PW1
+     A          R PANTCAP1
+     A*%%TS  SD  20250327  094546  INF1IVAN    REL-V7R5M0  5770-WDS
+     A                                      TEXT('PIE PANTALLA 1')
+     A                                      OVERLAY
+     A            X1OMSG         7A  H
+     A            X1MSF1         6A  O 20 74DSPATR(HI)
+     A            XXEMSU        79A  O 21  2DSPATR(UL)
+     A                                 22  2'F3=Salir'
+     A                                 22 14'F5=Actualizar'
+     A                                 22 31'F6=Altas'
+     A  51
+     AO 52        X1MSG         78A  O 24  2MSGID(&X1OMSG SINMSG)
+     A                                      DSPATR(HI)
+     A N51N52                          24 43'(c) COPYRIGHT Colinet-Trotta SRL 1-
+     A                                      996'
+     A                                      DSPATR(HI)

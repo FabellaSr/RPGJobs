@@ -1,0 +1,13 @@
+     A                                      REF(*LIBL/REFERENCIA)
+     A                                      UNIQUE
+     A          R S1T860
+     A            S@HECG    R               REFFLD(HECG)
+     A            S@HECD    R               REFFLD(HECD)
+     A            S@USER    R               REFFLD(USER)
+     A            S@TIME    R               REFFLD(TIME)
+     A                                      EDTWRD('  :  :  ')
+     A            S@DATE    R               REFFLD(DATE)
+     A                                      EDTWRD('  /  /  ')
+     A            S@ESTA    R               REFFLD(MARP)
+     A** - ------------------------------- *
+     A          K S@HECG

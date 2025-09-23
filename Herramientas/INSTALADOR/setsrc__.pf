@@ -1,0 +1,32 @@
+                                            REF(REFERENCIA)
+                                            UNIQUE
+                R S1TSRC
+                  S1EMPR    R               REFFLD(EMPR)
+                  S1SUCU    R               REFFLD(SUCU)
+                  S1TLIB        10A         COLHDG('BIBLIOTECA')
+                  S1FILE        10A         COLHDG('FILE')
+                  S1TFUE        10A         COLHDG('FUENTE')
+                  S1TIPO        10A         COLHDG('TIPO')
+                  S1SECU    R               REFFLD(SECU)
+                  S1MARP    R               REFFLD(MARP)
+                                            COLHDG('ESTADO')
+                  S1DESA        10A         COLHDG('DESA')
+                  S1ECHA    R               REFFLD(FER8)
+                                            COLHDG('FECHA MAQUINA')
+                  S1ANIO    R               REFFLD(FERA)
+                  S1FMES    R               REFFLD(FERM)
+                  S1FDIA    R               REFFLD(FERD)
+                  S1ECH1    R               REFFLD(FER8)
+                                            COLHDG('FECHA INSTAL')
+                  S1LIBT        10A         COLHDG('BIBLIOTECA IN')
+                  S1FILT        10A         COLHDG('FILE INSTALAD')
+                  S1AUSU    R               REFFLD(AUSU)
+                  S1DATE    R               REFFLD(DATE)
+                  S1TIME    R               REFFLD(TIME)
+
+                K S1EMPR
+                K S1SUCU
+                K S1FILE
+                K S1TLIB
+                K S1SECU
+                K S1TFUE
