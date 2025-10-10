@@ -14,8 +14,7 @@
      * - ----------------------------------------------------------- *
 
      D Initialized     s              1N
-     D @PsDs          sds                  qualified
-     D   CurUsr                      10a   overlay(@PsDs:358)
+
       * ------------------------------------------------------------ *
       * svpapi_inz(): Inicializa módulo.                             *
       *                                                              *
@@ -330,10 +329,10 @@
             when x = 2;
             //le mando obj y liboj
               QUSLOBJ( SPACENAME
-                      : CHK_OBJ2
-                      : todo
-                      : ATTRIBUTEALL
-                      : errCode );
+                     : CHK_OBJ2
+                     : todo
+                     : ATTRIBUTEALL
+                     : errCode );
               x = 3;
             when x = 3;
               endpgm = svpapi_getPointerToTheUsrSpace(PTR);
@@ -408,13 +407,13 @@
             callp QCMDEXC(CMD: CMDLEN);
         endif;
             CMD = 'MOVOBJ OBJ('
-                    + %trim(peFlib)
-                    + '/'
-                    + %trim(peNfue)
-                    + ') OBJTYPE('
-                    + %trim(peTobj)
-                    + ') TOlib('
-                    + %trim(peTlib) + ')';
+                + %trim(peFlib)
+                + '/'
+                + %trim(peNfue)
+                + ') OBJTYPE('
+                + %trim(peTobj)
+                + ') TOlib('
+                + %trim(peTlib) + ')';
             CMDLEN = %len(%trim(CMD));
             callp QCMDEXC(CMD: CMDLEN);
             return *on;
@@ -448,13 +447,13 @@
           on-error;
             monitor;
               CMD = 'MOVOBJ OBJ('
-                      + %trim(peFlib)
-                      + '/'
-                      + %trim(peNfue)
-                      + ') OBJTYPE('
-                      + %trim(peTobj)
-                      + ') TOlib('
-                      + %trim(peObjl) + ')';
+                  + %trim(peFlib)
+                  + '/'
+                  + %trim(peNfue)
+                  + ') OBJTYPE('
+                  + %trim(peTobj)
+                  + ') TOlib('
+                  + %trim(peObjl) + ')';
               CMDLEN = %len(%trim(CMD));
               callp QCMDEXC(CMD: CMDLEN);
             on-error;

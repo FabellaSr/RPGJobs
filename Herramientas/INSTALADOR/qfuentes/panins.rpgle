@@ -1,6 +1,3 @@
-     H decedit(',') datedit(*dmy/)
-     H actgrp(*caller) dftactgrp(*no)
-     H option(*nodebugio: *srcstmt)
      *****************************************************************
      *  PANINS  : PANTALLA DE INSTALACIONES                          *
      *                                                               *
@@ -9,50 +6,90 @@
      *****************************************************************
      * MODIFICACIONES:                                               *
      *****************************************************************
-     *****************************************************************
-     FpaninsFm  cf   e             workstn
-     F                                     sfile(paninss1:sf1rrn)
-     F                                     sfile(paninss2:sf2rrn)
-      /copy instalador/QCPYBOOKS,svpcfg_H
-      /copy instalador/QCPYBOOKS,svpinst_H
-      /copy hdiile/qcpybooks,svpvls_h
-     * - ----------------------------------------------------------- *
-     *Empresa/Sucursal
-     * - ----------------------------------------------------------- *
-     D @@lda          uds
-     D  usempr               401    401
-     D  ussucu               402    403
-     *****************************************************************
-      */Variables
-     *****************************************************************
-      *Variables para control del SF
-     D @@lsf1          s              2  0
-     D @@lsf2          s              2  0
-     D sf1rrn          s              9  0
-     D sf2rrn          s              9  0
-      *setins
-     D uinst           S                   like(SIINST)
-     D pinst           S                   like(SIINST)
-      *setsrc
-     D pfuen           S                   like(S1nfue)
-     D ufuen           S                   like(S1nfue)
-      *secuencias
-     D psecu           S                   like(s1secu)
-     D usecu           S                   like(s1secu)
-      *Variable para descripciones
-     D des             s             10    dim(4) ctdata perrcd(1)
-     D instaloOk       S               n   inz(*off)
+        ctl-opt
+          actgrp(*caller)
+          bnddir('HDIILE/HDIBDIR')
+          option(*srcstmt: *nodebugio: *nounref: *noshowcpy)
+          datfmt(*iso) timfmt(*iso);
+      // - ----------------------------------------------------------- - //
+      //   Archivos                                                     //
+      // - ----------------------------------------------------------- - //
+       dcl-f paninsFm workstn
+           sfile(paninss1: sf1rrn)
+           sfile(paninss2: sf2rrn);
+
+      /copy *libl/QCPYBOOKS,svpcfg_H
+      /copy *libl/QCPYBOOKS,svpinst_H
+      /copy *libl/qcpybooks,svpvls_h
+        // ----------------------- Empresa / Sucu ------------------------- //
+        dcl-ds uds qualified dtaara(*lda);
+            usempr char(1) pos(401);
+            ussucu char(2) pos(402);
+        end-ds;
+        // ----------------------------------------------------------------
+        // Variables varias
+        // ----------------------------------------------------------------
+
+       // *Variables para control del SF
+        dcl-s sf1rrn  packed(9:0);
+        dcl-s sf2rrn  packed(9:0);
+
+       // *setins
+        dcl-s uinst   like(SIINST);
+        dcl-s pinst   like(SIINST);
+
+       // *setsrc
+        dcl-s pfuen   like(S1nfue);
+        dcl-s ufuen   like(S1nfue);
+
+       // *secuencias
+        dcl-s psecu   like(s1secu);
+        dcl-s usecu   like(s1secu);
+        dcl-s auxSec  like(s1secu);
+
+       // *Variable para descripciones (CTDATA)
+        dcl-s des     char(10) dim(4) ctdata perrcd(1);
+
+       // Indicador
+        dcl-s instaloOk  ind inz(*off);
+        dcl-s endpgm     ind inz(*off);
+
+        dcl-ds k1etins01 likerec(SITINS01:*key);
+        dcl-ds kLast     likeds(k1etins01);
+        dcl-ds kfirs     likeds(k1etins01);
+        // --- Paginación y posición y mas---------------------------------
+        dcl-s primeraCarga   ind  inz(*on);
+        dcl-s noHayMas       ind  inz(*off);
+        dcl-s esPrimeraPag   ind  inz(*on);
+        dcl-s primeraEntrada ind  inz(*on);
+        dcl-s calculoOk      ind  inz(*off);
+        dcl-s pendDisponible ind  inz(*on);
+        dcl-s endLoop        ind  inz(*off);
+        dcl-s  i         int(10) inz(1);
      *****************************************************************
       /SPACE
      *****************************************************************
       /free
+          endpgm = *off;
           exsr inicio;
-          dou *inkc;
+          dow not endpgm;
+               // Preparar control del subfile: limpiar y mostrar
+               *in31 = *on;
+               *in32 = *off;
+               if primeraEntrada;
+                    *in30 = *off;
+                    write paninsC1;
+                    primeraEntrada = *off;
+                    exsr sf1car;
+               endif;
                select;
                     when xxiden = 1;
                          exsr pant01;
                     when xxiden = 2;
                          exsr pant02;
+                         primeraEntrada = *on;
+                         primeraCarga   = *on;
+                         exsr sf1bor;
                endsl;
           enddo;
           exsr srclos;
@@ -63,9 +100,8 @@
      ******************************************************
           begsr inicio;
                exsr defini;
-               eval xxiden = 1;
-               exsr sf1car;
-               in @@lda;
+               xxiden = 1;
+               in uds;
           endsr;
      ******************************************************
       /SPACE
@@ -95,18 +131,18 @@
                     exfmt PANINSAUT;
                     select;
                     // Confirmar
-                    when *inka;
-                         monitor;
-                              tipo = *off;
-                              callp INSTCOMP( xxdesa
-                                            : xxdesc
-                                            : tipo
-                                            : instaloOk);
-                         on-error;
-                              exfmt ERROBCPP;
-                         endmon;
-                    other;
-                         exfmt CANCELA;
+                         when *inka;
+                              monitor;
+                                   tipo = *off;
+                                   callp INSTCOMP( xxdesa
+                                             : xxdesc
+                                             : tipo
+                                             : instaloOk);
+                              on-error;
+                                   exfmt ERROBCPP;
+                              endmon;
+                         other;
+                              exfmt CANCELA;
                     endsl;
                     if instaloOk;
                          exfmt TODOOK;
@@ -137,15 +173,24 @@
                     endif;
                     exsr sf1car;
                endif;
-               // ROLL UP
-               if *in31 and *in22;
-                    exsr rupinst;
+               // Teclas de función básicas
+               // --- F09  -----------------------------------
+               if *in12;
+                    return;
                endif;
-               // ROLL DOWN
-               if *in31 and *in23;
-                    exsr rdoinst;
+               // --- F3 -------------------------------------
+               if  *in03;
+                    endpgm = *on;
+                    return;
                endif;
-               // INTRO
+               // --- ROLL Adelante --------------------------
+               if *in28;
+                    exsr  RollDown;
+               endif;
+               // --- ROLL Atras -----------------------------
+               if *in27;
+                    exsr  RollUp;
+               endif;
                if *in31 and not *in90;
                     exsr vali01;
                endif;
@@ -154,24 +199,53 @@
       /SPACE
      ******************************************************
           begsr sf1car;
-               // CARGA SUBFILE '1'
-               exsr sf1bor;
-               setll ksetinsu setins;
-               reade ksetins setins;
-               dow not %eof(setins) and @@lsf1 < 12;
-                    exsr moar01;
-                    *in31 = *on;
-                    sf1rrn += 1;
-                    @@lsf1 += 1;
-                    write paninss1;
-                    if @@lsf1 = 1;
-                         psecu = sisecu;
-                         pinst = siinst;
+
+               // Posicionar 1 sola vez al principio del archivo
+               if primeraCarga;
+                    setll *start setins01;
+                    primeraCarga = *off;
+                    esPrimeraPag = *on;
+               else;
+                    setll %kds(kLast) setins01;
+               endif;
+               // Borrar SFL
+               *in30    = *off;
+               write     paninsC1;
+               sf1rrn    = *zeros;
+               noHayMas = *off;
+               read(n) setins01;
+               dow not %eof(setins01);
+                    if sf1rrn = 9;
+                         leave;
                     endif;
-                    usecu = sisecu;
-                    uinst = siinst;
-                    reade ksetins setins;
+
+                    *in30 = *on;
+                    // Guardar clave de la primera fila de la página
+                    if sf1rrn = 0;
+                         kfirs.sidate = sidate;
+                         kfirs.siempr = siempr;
+                         kfirs.sisucu = sisucu;
+                         kfirs.sisecu = sisecu;
+                    endif;
+                    X1OPCI = *zeros;
+                    exsr moar01;
+                    sf1rrn += 1;
+                    write paninsS1;
+                    //Me guardo el ultimo
+                    kLast.sidate = sidate;
+                    kLast.siempr = siempr;
+                    kLast.sisucu = sisucu;
+                    kLast.sisecu = sisecu;
+
+                    read(n) setins01;
                enddo;
+               if %eof(setins01);
+                    noHayMas = *on;
+               endif;
+               //si in32 = *on va a mostrar "Final"
+               *in32  = noHayMas;       // SFLEND(*MORE) si hay más
+               *in40  = esPrimeraPag;   // indicador primera página
+               *in41  = not noHayMas;   // indicador última página
           endsr;
      ******************************************************
       /SPACE
@@ -182,7 +256,7 @@
                *in30 = *off;
                *in31 = *off;
                sf1rrn = *zeros;
-               @@lsf1 = *zeros;
+               sf2rrn = *zeros;
                write paninsc1;
                *in30 = *on;
           endsr;
@@ -207,40 +281,45 @@
                instaloOk = *off;
                clear x1opci;
           endsr;
-     c*PANTALLA ARRIBA, PANTALLA ABAJO
-     ******************************************************
-      /SPACE
-     ******************************************************
-          begsr rupinst;
-               // ROLL PARA ADELANTE
-               setgt ksetinsu setins;
-               reade ksetins setins;
-               if %eof(setins);
-                    usecu = psecu;
-                    uinst = siinst;
-               else;
-                    psecu = sisecu;
-                    pinst = siinst;
+          // ----------------------------------------------------------------
+          // RollDown: continuar desde la posición actual y recargar SFL
+          // ----------------------------------------------------------------
+          begsr RollDown;
+               // Si ya estamos en última página, no hacemos nada
+               if NOT noHayMas;
+                    noHayMas = *off;
+                    esPrimeraPag = *off;
+                    exsr sf1car;
                endif;
-               exsr sf1car;
+
           endsr;
-     ******************************************************
-      /SPACE
-     ******************************************************
-          begsr rdoinst;
-               // ROLL PARA ATRÁS
-               @@lsf1 = *zeros;
-               setll ksetinsp setins;
-               dow @@lsf1 < 12;
-                    readpe ksetins setins;
-                    if %eof(setins);
-                         leave;
-                    else;
-                         @@lsf1 += 1;
-                         usecu = sisecu;
-                         uinst = siinst;
-                    endif;
+          // ----------------------------------------------------------------
+          // RollUp: retrocede una página (9 ítems) y recarga SFL
+          // ----------------------------------------------------------------
+          begsr RollUp;
+               // Posicionarse antes de la primera clave actual y retroceder 9
+               setll %kds(kfirs) setins01;        // al principio de la página actual
+               readp(n) setins01;                  // ir al registro anterior
+               if %eof(setins01);
+                    // Ya estamos en el inicio del archivo
+                    primeraCarga = *on;           // para que CargarSubfile haga *LOVAL
+                    esPrimeraPag = *on;
+                    exsr sf1car;
+
+               endif;
+               i = 0;
+               // Retroceder hasta 9 registros (o hasta el inicio)
+               dow i < 9 and not %eof(setins01);
+                    readp(n) setins01;
+                    i += 1;
                enddo;
+               kLast.sidate = sidate;
+               kLast.siempr = siempr;
+               kLast.sisucu = sisucu;
+               kLast.sisecu = sisecu;
+               // Si llegamos al inicio, marcamos primera página
+               esPrimeraPag = %eof(setins01);
+               // Cargar hacia adelante desde donde quedó el puntero
                exsr sf1car;
           endsr;
      ******************************************************
@@ -262,46 +341,55 @@
      ******************************************************
           begsr pant02;
                // PROCESO PANTALLA
-               if not *in50;
-                    write paninsca;
-               endif;
-               write paninsp2;
-               if not *in31;
-                    write panins01;
-               endif;
-               exfmt paninsc2;
-               // FUNCIÓN 12: VUELVO
-               if *inkl;
-                    xxiden = 1;
-                    psecu = sisecu;
-                    pinst = siinst;
-                    exsr sf1car;
-               endif;
-               // ROLL UP
-               if *in31 and *in22;
-                    exsr rollup;
-               endif;
-               // ROLL DOWN
-               if *in31 and *in23;
-                    exsr rolldo;
-               endif;
+               dow not *in12;
+                    if not *in50;
+                         write paninsca;
+                    endif;
+                    write paninsp2;
+                    if not *in31;
+                         write panins01;
+                    endif;
+                    exfmt paninsc2;
+                    // FUNCIÓN 12: VUELVO
 
-               readc paninss2;
-               if x2opci = 2;
-                    exsr cambioDestinoObjFuente;
-               endif;
+                    // ROLL UP
+                    if *in27;
+                         exsr rollupSrc;
+                    endif;
+                    // ROLL DOWN
+                    if *in28;
+                         exsr rolldo;
+                    endif;
 
-               if *inkg and s1maro = '0';
-                    callp pggfuentes(s1desa : x1secu);
-               endif;
-               if *inkh and s1marf = '0';
-                    callp pggobjetos(s1desa : x1secu);
-               endif;
+                    readc paninss2;
+                    if x2opci = 2;
+                         exsr cambioDestinoObjFuente;
+                    endif;
 
-               if *inkh;
-
-               endif;
-               exsr sf2car;
+                    if *in07 and s1marf = '0';
+                         auxSec = x1secu;
+                         callp pggfuentes(s1desa : auxSec);
+                         if auxSec = -1;
+                              exfmt FUENTEAERR;
+                         else;
+                              x1secu = auxSec;
+                         endif;
+                    endif;
+                    if *in08 and s1maro = '0';
+                         auxSec = x1secu;
+                         callp pggobjetos(s1desa : auxSec);
+                         if auxSec = -1;
+                              exfmt FUENTEAERR;
+                         else;
+                              x1secu = auxSec;
+                         endif;
+                    endif;
+                    exsr sf2car;
+               enddo;
+               xxiden = 1;
+               psecu = sisecu;
+               pinst = siinst;
+               exsr sf1car;
           endsr;
      ******************************************************
       /SPACE
@@ -334,21 +422,20 @@
           begsr sf2car;
                // BORRA SUBFILE '2'
                exsr sf2bor;
-               setll ksetsrc0 setsrc;
+               setll ksetsrc setsrc;
                reade ksetsrc setsrc;
-               dow not %eof(setsrc) and @@lsf2 < 12;
+               dow not %eof(setsrc) and sf2rrn < 09;
                     *in31 = *on;
                     exsr moar02;
-                    if @@lsf2 = 1;
+                    if sf2rrn = 1;
                          pfuen = s1nfue;
                     else;
                          ufuen = s1nfue;
                     endif;
                     sf2rrn += 1;
-                    @@lsf2 += 1;
                    // if xxin43 = '1';
-                         write paninss2;
-                         *in43 = *off;
+                    write paninss2;
+                    *in43 = *off;
                    // endif;
                     reade ksetsrc setsrc;
                enddo;
@@ -356,9 +443,9 @@
      ******************************************************
       /SPACE
      ******************************************************
-          begsr rollup;
+          begsr rollupSrc;
                // ROLL PARA ADELANTE
-               setgt ksetsrc0 setsrc;
+               setgt ksetsrc setsrc;
                reade ksetsrc setsrc;
                if %eof(setsrc);
                     ufuen = s1nfue;
@@ -372,14 +459,14 @@
      ******************************************************
           begsr rolldo;
                // ROLL PARA ATRÁS
-               @@lsf2 = *zeros;
+               sf2rrn = *zeros;
                setll ksetsrc1 setsrc;
-               dow @@lsf2 < 12;
+               dow sf2rrn < 09;
                     readpe ksetsrc setsrc;
                     if %eof(setsrc);
                          leave;
                     else;
-                         @@lsf2 += 1;
+                         sf2rrn += 1;
                          ufuen = s1nfue;
                     endif;
                enddo;
@@ -390,10 +477,10 @@
      ******************************************************
           begsr sf2bor;
                // BORRA SUBFILE '2'
-               *in30 = *off;
-               *in31 = *off;
+               auxSec = 0;
+               *in30  = *off;
+               *in31  = *off;
                sf2rrn = *zeros;
-               @@lsf2 = *zeros;
                write paninsc2;
                *in30 = *on;
           endsr;
@@ -432,46 +519,37 @@
      C     defini        begsr                                                  |
      *- DEFINICIONES DEL PROGRAMA ------------------------|
      *- DEFINICION DE CAMPOS...                           |
-     *  - CAMPOS DE TRABAJO...                            |
-     C     *dtaara       define    *lda          @@lda                          |
-     C                   eval      @@lsf1 = 12                                  |
-     C                   eval      @@lsf2 = 12                                  |
+     *  - CAMPOS DE TRABAJO...                            |     |
      *- DEFINICION DE CLAVES P/ACCESO A ARCHIVOS ...      |
      C     ksetsrc1      klist
-     C                   kfld                    usempr
-     C                   kfld                    ussucu
+     C                   kfld                    uds.usempr
+     C                   kfld                    uds.ussucu
      C                   kfld                    X1desa
      C                   kfld                    X1secu
      C                   kfld                    pfuen
-     C     ksetsrc0      klist
-     C                   kfld                    usempr
-     C                   kfld                    ussucu
-     C                   kfld                    X1desa
-     C                   kfld                    X1secu
-     C                   kfld                    ufuen
      C     ksetsrcu      klist
-     C                   kfld                    usempr
-     C                   kfld                    ussucu
+     C                   kfld                    uds.usempr
+     C                   kfld                    uds.ussucu
      C                   kfld                    s1desa
      C                   kfld                    s1secu
      C                   kfld                    x2obje
      C     ksetsrc       klist
-     C                   kfld                    usempr
-     C                   kfld                    ussucu
+     C                   kfld                    uds.usempr
+     C                   kfld                    uds.ussucu
      C                   kfld                    X1desa
      C                   kfld                    X1secu
       *inst
      C     ksetins       klist
-     C                   kfld                    usempr
-     C                   kfld                    ussucu
+     C                   kfld                    uds.usempr
+     C                   kfld                    uds.ussucu
      C     ksetinsu      klist
-     C                   kfld                    usempr
-     C                   kfld                    ussucu
+     C                   kfld                    uds.usempr
+     C                   kfld                    uds.ussucu
      C                   kfld                    uinst
      C                   kfld                    usecu
      C     ksetinsp      klist
-     C                   kfld                    usempr
-     C                   kfld                    ussucu
+     C                   kfld                    uds.usempr
+     C                   kfld                    uds.ussucu
      C                   kfld                    pinst
      C                   kfld                    psecu
      C                   endsr                                                  |

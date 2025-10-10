@@ -22,9 +22,18 @@
      * - ----------------------------------------------------------- *
      *Empresa/Sucursal
      * - ----------------------------------------------------------- *
-     D                uds
-     D  usempr               401    401
-     D  ussucu               402    403
+        dcl-ds uds qualified dtaara(*lda);
+            usempr char(1) pos(401);
+            ussucu char(2) pos(402);
+        end-ds;
+        dcl-ds @PsDs psds qualified;
+            this   char(10)   pos(1);
+            Job    char(26)   pos(244);
+            JobNam char(10)   pos(244);
+            JobUsr char(10)   pos(254);
+            JobNum zoned(6:0) pos(264);
+            CurUsr char(10)   pos(358);
+        end-ds;
      * ------------------------------------------------------------- *
       *   Cuerpo Principal
      * - ----------------------------------------------------------- *
@@ -35,7 +44,9 @@
             reade %kds(k1tsrc:4) setsrc;
             dow not %eof(setsrc);
                 mueve();
-                graba();
+                if secu <> -1;
+                    graba();
+                endif;
                 reade %kds(k1tsrc:4) setsrc;
             enddo;
           return;
@@ -44,7 +55,11 @@
       *   Procedimiento: mueve
      * - ----------------------------------------------------------- *
         dcl-proc mueve;
-            callp MOVSRCMBRC(fromfile: tofile: s1nfue);
+            monitor;
+                callp MOVSRCMBRC(fromfile: tofile: s1nfue);
+            on-error;
+                secu = -1;
+            endmon;
         end-proc;
      * ------------------------------------------------------------- *
       *   Procedimiento: graba
@@ -61,8 +76,9 @@
       *    inzr
      * - ----------------------------------------------------------- *
         dcl-proc inicializar;
-            k1tsrc.S1EMPR = usempr;
-            k1tsrc.S1SUCU = ussucu;
+            in uds;
+            k1tsrc.S1EMPR = uds.usempr;
+            k1tsrc.S1SUCU = uds.ussucu;
             k1tsrc.S1desa = desa;
             k1tsrc.S1SECU = %dec(secu:2:0);
         end-proc;

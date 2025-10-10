@@ -16,8 +16,6 @@
      * - ----------------------------------------------------------- *
 
      D Initialized     s              1N
-     D @PsDs          sds                  qualified
-     D   CurUsr                      10a   overlay(@PsDs:358)
       * ------------------------------------------------------------ *
       * svpcfg_inz(): Inicializa módulo.                             *
       *                                                              *

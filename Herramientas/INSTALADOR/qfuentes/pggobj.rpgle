@@ -37,6 +37,12 @@
           k1tsrc.s1sucu = ussucu;
           k1tsrc.s1desa = desa;
           k1tsrc.s1secu = %dec(SECU:2:0);
+          cmd = 'ADDLIBLE LIB(INSTALTEMP) POSITION(*FIRST)';
+          monitor;
+            qCmdExc( %trim(cmd) : %len(%trim(cmd)) );
+          on-error;
+            *in50 = *on;
+          endmon;
           //chkobj();
           if not bloqueado;
             muevoObj();

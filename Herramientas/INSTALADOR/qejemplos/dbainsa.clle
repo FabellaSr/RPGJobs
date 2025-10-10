@@ -1,0 +1,10 @@
+/********************************************************************/
+/* Siniestros: Control de Carta de Franquicia                       */
+/*                                                                  */
+/* Fabella Ivan M.                          **11/09/2025            */
+/********************************************************************/
+
+PGM PARM(&TSBS)
+             DCL        VAR(&TSBS) TYPE(*DEC) LEN(2 0)
+             CALL       PGM(DBA859)
+endpgm
