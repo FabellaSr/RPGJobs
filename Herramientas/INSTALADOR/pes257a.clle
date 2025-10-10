@@ -1,0 +1,50 @@
+/* ------------------------------------------------------------------*/
+/*                                                                   */
+/* PROCESO DE GENERACION AUTOMATICA DE LISTADO DE COTEJO DE PERSONAS */
+/* ORDEN DE CONGELAMIENTO DE ACTIVOS Y CLIENTES VIGENTES             */
+/*                                                                   */
+/* Identificación: Troncal de llamada a Programas para Proceso de    */
+/*                 Generacion de nueva planilla y envio mail         */
+/*                                                                   */
+/* CAA 18/09/2025 Creacion programa bajo DESA-0915                   */
+/* ------------------------------------------------------------------*/
+ INICIO:     PGM
+
+
+/* DECLARACION DE VARIABLES...*/
+             DCL        VAR(&LDALMA) TYPE(*CHAR) LEN(2)
+             DCL        VAR(&PROG) TYPE(*CHAR) LEN(10)
+             DCL        VAR(&NOMP) TYPE(*CHAR) LEN(40)
+             DCL        VAR(&CPGM) TYPE(*CHAR) LEN(10)
+             DCL        VAR(&NOMB1) TYPE(*CHAR) LEN(40)
+             DCL        VAR(&NOME) TYPE(*CHAR) LEN(56)
+             DCL        VAR(&USER) TYPE(*CHAR) LEN(10)
+             DCL        VAR(&CTCU) TYPE(*CHAR) LEN(3)
+             DCL        VAR(&SINO) TYPE(*CHAR) LEN(2)
+             DCL        VAR(&MAR2) TYPE(*CHAR) LEN(1)
+             DCL        VAR(&LIBRARY) TYPE(*CHAR) LEN(10)
+             DCL        VAR(&@@MAND) TYPE(*CHAR) LEN(2)
+             DCL        VAR(&FILE) TYPE(*CHAR) LEN(75)
+             DCLF       FILE(SPPCAS1M)
+             RTVJOBA    USER(&USER)
+
+             RTVDTAARA  DTAARA(*LDA (404 10)) RTNVAR(&LIBRARY)
+
+/* CARGAR VARIABLES...*/
+
+             CHGVAR     VAR(&X1TITU) VALUE('PROCESO +
+                          &NOMB1                                     ')
+             CHGVAR     VAR(&X1FILE) VALUE('PES257')
+             CHGVAR     VAR(&X1LIB) VALUE(&LIBRARY)
+             CHGVAR     VAR(&X1MBR) VALUE('*FIRST')
+
+/* COPIAR DESDE LA CARPETA...*/
+
+             CALL       PGM(PES257) PARM(&FILE &LDALMA)
+             IF         COND(&LDALMA = 'KC') THEN(GOTO CMDLBL(FINAL))
+    /*       SBMJOB     CMD(CALL PGM(PES258A)) JOB(PES257A) */
+ FINAL:
+             DLTOVR     FILE(*ALL)
+             MONMSG     MSGID(CPF9999)
+             RCLRSC     LVL(*CALLER)
+             ENDPGM

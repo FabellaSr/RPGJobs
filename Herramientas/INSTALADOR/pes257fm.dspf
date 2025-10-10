@@ -1,0 +1,106 @@
+     A*%%TS  SD  20251003  142151  INF1CARL    REL-V7R5M0  5770-WDS
+     A*%%EC
+     A                                      DSPSIZ(24 80 *DS3)
+     A                                      REF(*LIBL/REFERENCIA REFER)
+     A          R PES257CA
+     A                                      ASSUME
+     A                                  1  2'PES257'
+     A                                  1  9USER
+     A                                  1 26'         PRODUCCION         '
+     A                                      DSPATR(RI)
+     A                                  1 63DATE
+     A                                      EDTCDE(Y)
+     A                                  1 72TIME
+     A                                  2  2'  Cotejo de personas con orden de -
+     A                                      congelamiento de activos y clientes-
+     a                                       vigentes'
+     A                                      DSPATR(UL)
+     A                                      COLOR(PNK)
+     A          R PES257P1
+     A                                      OVERLAY
+     A                                 24 17'F3=Salir'
+     A                                      COLOR(BLU)
+     A            XXEMSU        80A  O 23  1DSPATR(UL)
+     A                                 24  2'F1=Confirmar'
+     A                                      COLOR(WHT)
+     A          R PES25703
+     A                                      CF01
+     A                                      CF03
+     A                                      OVERLAY
+     A                                  8 26'ERROR DE VALIDACION DEL EXCEL'
+     A                                      DSPATR(HI)
+     A                                      DSPATR(UL)
+     A                                 10 28'Fila/Columna:'
+     A            X2FICO        10A  O 10 42COLOR(WHT)
+     A            X2MENS        30A  O 14 26COLOR(RED)
+     A            X2MEN1        50A  O 16 16COLOR(WHT)
+     A                                 12 23'Hoja:'
+     A            X2HOJA        30A  O 12 29COLOR(WHT)
+     A          R PES257NE
+     A                                      OVERLAY
+     A                                 13 17'(No se visualizan registros para e-
+     A                                      sta selección)'
+     A                                      COLOR(WHT)
+     A          R PES25705
+     A*%%TS  SD  20250918  160438  INF1CARL    REL-V7R5M0  5770-WDS
+     A                                      CF03
+     A                                      OVERLAY
+     A                                  8 31'VALIDACION DEL EXCEL'
+     A                                      DSPATR(UL)
+     A                                      DSPATR(HI)
+     A                                 12 22'Falta Hoja de Listado de personas -
+     A                                      congelamiento activos'
+     A                                      COLOR(RED)
+     A          R PES25707
+     A*%%TS  SD  20250926  150717  INF1CARL    REL-V7R5M0  5770-WDS
+     A                                      WINDOW(2 2 13 66)
+     A                                      CF01(01 'Confirmar')
+     A                                      CF04(04 'Ayuda')
+     A                                      CF12(12 'Cancelar')
+     A                                      OVERLAY
+     A                                 11  1'                                  -
+     A                                                                      '
+     A                                      DSPATR(UL)
+     A                                 12  2'F1=Confirmar'
+     A                                      COLOR(BLU)
+     A                                 12 25'F4=Ubicar Excel'
+     A                                      COLOR(BLU)
+     A                                 12 54'F12=Cancelar'
+     A                                      COLOR(BLU)
+     A                                  5  2'Carpeta . . :'
+     A                                  7  2'Documento PC:'
+     A            X2HDIR        50A  O  5 16COLOR(BLU)
+     A            X2FILE        50A  B  7 16DSPATR(HI)
+     A  65                                  DSPATR(PC)
+     A                                      CHECK(LC)
+     A  65                                  ERRMSG('Documento Invalido')
+     A                                      COLOR(WHT)
+     A                                  1  1'    Importar Listado personas con -
+     A                                      orden congelamiento activos     '
+     A                                      DSPATR(UL)
+     A                                      COLOR(PNK)
+     A          R PES257CS2                 SFL
+     A            X2FICO        10   O  7  5COLOR(WHT)
+     A            X2MEN1        50   O  7 21COLOR(RED)
+     A          R PES257C2                  SFLCTL(PES257CS2)
+     A                                      CF03(03 'Salir')
+     A                                      PAGEUP(27)
+     A                                      PAGEDOWN(28)
+     A                                      VLDCMDKEY(29)
+     A                                      OVERLAY
+     A  40                                  SFLDSP
+     A  41                                  SFLDSPCTL
+     A N40                                  SFLCLR
+     A  42                                  SFLEND(*MORE)
+     A                                      SFLSIZ(9999)
+     A                                      SFLPAG(0008)
+     A                                      WINDOW(2 2 16 70)
+     A                                  5  2'Hoja/Columna/Fila'
+     A                                  5 21'Descripción del Error'
+     A                                  1  1'                     ERROR DE VALI-
+     A                                      DACION DEL EXCEL                   -
+     A                                       '
+     A                                      DSPATR(UL)
+     A                                      COLOR(PNK)
+     A                                  3 61'F3=Salir'
+     A                                      COLOR(BLU)
