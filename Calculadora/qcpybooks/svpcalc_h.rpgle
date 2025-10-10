@@ -2,7 +2,7 @@
       /eof
       /endif
       /define SVPCALC_H
-       /copy hdiile/qcpybooks,wsstruc_h
+       /copy *libl/qcpybooks,wsstruc_h
 
      * ---------------------------------------------------- *
       * Estrucutura para recibr datos post/get

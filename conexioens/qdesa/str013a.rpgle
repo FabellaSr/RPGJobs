@@ -32,7 +32,7 @@
         // -------------------- Interfaz de programa ---------------------- //
         // --------------------     de validacion    ---------------------- //
         dcl-pr STR013 extpgm('*LIBL/STR013');
-          pXIdpr ind;
+          pXIdpr ind inz(*off);
           peEmpr char(1);
           peSucu char(2);
           peSini packed(7:0);
@@ -48,7 +48,6 @@
         k1y915.t@empr = peEmpr;
         k1y915.t@sucu = peSucu;
         k1y915.t@tnum = 'PI';
-        pXIdpr = *OFF;
         chain %kds(k1y915:3) set915;
         if %found(set915);
             spwliblc('P');
