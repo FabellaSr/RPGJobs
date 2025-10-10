@@ -135,9 +135,9 @@
                               monitor;
                                    tipo = *off;
                                    callp INSTCOMP( xxdesa
-                                             : xxdesc
-                                             : tipo
-                                             : instaloOk);
+                                                 : xxdesc
+                                                 : tipo
+                                                 : instaloOk);
                               on-error;
                                    exfmt ERROBCPP;
                               endmon;

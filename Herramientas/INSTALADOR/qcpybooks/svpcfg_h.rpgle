@@ -2,50 +2,56 @@
       /eof
       /endif
       /define SVPCFG_H
-     * ---------------------------------------------------- *
-     *  Estructura para llamar al CLRLIB
-     * ---------------------------------------------------- *
-     DCLRLIB           pr                  extpgm('CLRLIB')
-     D lib                           10a
-     D s                             10A
-     * ---------------------------------------------------- *
-     *  Estructura para llamar al RSTTTCMD
-     * ---------------------------------------------------- *
-     DRSTTTCMD         pr                  extpgm('RSTTTCMD')
-     D libr                          10a
-     D savf                          10a
-     D lsav                          10a
-     D savl                          10a
-     * Sus variables...
-     D conf_obj        DS            30
-     D  libr1                  1     10
-     D  lsav1                 11     20
-     D  savl1                 21     30
-     * ---------------------------------------------------- *
-     *  Estructura para llamar al getsavf
-     * ---------------------------------------------------- *
-     DGETSAVF          pr                  extpgm('GETSAVF')
-     D SAVF                          10a
-     D  peRst                          n
-     D  peDlt                          n
-      * ------------------------------------------------------------ *
-      * svpcfg_inz(): Inicializa módulo.                             *
-      *                                                              *
-      * void                                                         *
-      * ------------------------------------------------------------ *
-     D svpcfg_inz      pr
-      * ------------------------------------------------------------ *
-      * svpcfg_end(): Finaliza módulo.                               *
-      *                                                              *
-      * void                                                         *
-      * ------------------------------------------------------------ *
-     D svpcfg_end      pr
-      * ------------------------------------------------------------ *
-      * svpcfg_ambiente():                                           *
-      *                                                              *
-      * Retorna: on off.                                             *
-      * ------------------------------------------------------------ *
-     D svpcfg_ambiente...
-     D                 pr              n
-     D   pxAmbi                      10
+            dcl-s Initialized    ind;
+            // ----------------------------------------------------
+            //  Estructura para llamar al CLRLIB
+            // ----------------------------------------------------
+            dcl-pr CLRLIB extpgm('CLRLIB');
+                  lib char(10);
+                  s   char(10);
+            end-pr;
+
+            // ----------------------------------------------------
+            //  Estructura para llamar al RSTTTCMD
+            // ----------------------------------------------------
+            dcl-pr RSTTTCMD extpgm('RSTTTCMD');
+                  libr char(10);
+                  savf char(10);
+                  lsav char(10);
+                  savl char(10);
+            end-pr;
+
+            // Sus variables...
+            dcl-ds conf_obj;
+                  libr1 char(10) pos(1);
+                  lsav1 char(10) pos(11);
+                  savl1 char(10) pos(21);
+            end-ds;
+
+            // ----------------------------------------------------
+            //  Estructura para llamar al GETSAVF
+            // ----------------------------------------------------
+            dcl-pr GETSAVF extpgm('GETSAVF');
+                  SAVF   char(10);
+                  peRst  ind;
+                  peDlt  ind;
+            end-pr;
+
+            // ------------------------------------------------------------
+            //  svpcfg_inz(): Inicializa módulo.
+            // ------------------------------------------------------------
+            dcl-pr svpcfg_inz end-pr;
+
+            // ------------------------------------------------------------
+            //  svpcfg_end(): Finaliza módulo.
+            // ------------------------------------------------------------
+            dcl-pr svpcfg_end end-pr;
+
+            // ------------------------------------------------------------
+            //  svpcfg_ambiente():
+            //  Retorna: on / off.
+            // ------------------------------------------------------------
+            dcl-pr svpcfg_ambiente ind;
+            pxAmbi char(10);
+            end-pr;
 

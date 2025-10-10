@@ -1,7 +1,8 @@
-     H option(*nodebugio: *srcstmt: *noshowcpy)
-     H actgrp(*caller) dftactgrp(*no)
-     H COPYRIGHT('HDI Seguros')
-     H bnddir('INSTALADOR/HDIBDIR')
+        ctl-opt
+          actgrp(*caller)
+          bnddir('INSTALADOR/HDIBDIR')
+          option(*srcstmt: *nodebugio: *nounref: *noshowcpy)
+          datfmt(*iso) timfmt(*iso);
      * - ----------------------------------------------------------- *
      *  Sistema  .:  as400                                           *
      *               Primer paso de instalaciones.                   *
@@ -20,24 +21,47 @@
       /copy instalador/qcpybooks,svpapi_h
       /copy instalador/qcpybooks,svpinst_h
       /copy hdiile/qcpybooks,svpvls_h
-     FpaninsFm  cf   e             workstn
-     * - ----------------------------------------------------------- *
-      *   Se llama...
-     * - ----------------------------------------------------------- *
-     D PGGLEC          pr
-     D                               10
-     D                                2  0
-     D                               50
-     D PGGLEC          pi
-     D DESA                          10
-     D SECU                           2  0
-     D deta                          50
-     * - ----------------------------------------------------------- *
-     *Empresa/Sucursal
-     * - ----------------------------------------------------------- *
-     D                uds
-     D  usempr               401    401
-     D  ussucu               402    403
+          dcl-f paninsFm workstn;
+          // -----------------------------------------------------------
+          //  Prototipo
+          // -----------------------------------------------------------
+          dcl-pr PGGLEC;
+               DESA char(10);
+               SECU packed(2:0);
+               deta char(50);
+          end-pr;
+          // -----------------------------------------------------------
+          //  Interfaz
+          // -----------------------------------------------------------
+          dcl-pi PGGLEC;
+               DESA char(10);
+               SECU packed(2:0);
+               deta char(50);
+          end-pi;
+          // -----------------------------------------------------------
+          //  EMPRESA SUCURSAL
+          // -----------------------------------------------------------
+        dcl-ds uds qualified dtaara(*lda);
+            usempr char(1) pos(401);
+            ussucu char(2) pos(402);
+        end-ds;
+          // -----------------------------------------------------------
+          //  Estructura de fecha de vigencia
+          // -----------------------------------------------------------
+          dcl-ds FechaVigencia inz;
+               fecH packed(8:0) pos(1);
+               feca packed(4:0) pos(1);
+               fecm packed(2:0) pos(5);
+               fecd packed(2:0) pos(7);
+          end-ds;
+          dcl-ds @PsDs psds qualified;
+               this   char(10)   pos(1);
+               Job    char(26)   pos(244);
+               JobNam char(10)   pos(244);
+               JobUsr char(10)   pos(254);
+               JobNum zoned(6:0) pos(264);
+               CurUsr char(10)   pos(358);
+          end-ds;
      * ------------------------------------------------------------- *
       *   Cuerpo Principal
      * - ----------------------------------------------------------- *
@@ -65,14 +89,16 @@
      * - ----------------------------------------------------------- *
           dcl-proc primero;
                SECU = 0;
-               k1tsrc.s1empr = usempr;
-               k1tsrc.s1sucu = ussucu;
+               uds.usempr = 'A';
+               uds.ussucu = 'CA';
+               k1tsrc.s1empr = uds.usempr;
+               k1tsrc.s1sucu = uds.ussucu;
                k1tsrc.s1desa = desa;
                //para APIs
                SVPVLS_getValSys('INSTALTEMP': *omit : @@vsys);
                file  = desa;
-               flib  = %trim(@@vsys);
-               ffile = qfile;
+               FILE_LIB.flib  = %trim(@@vsys);
+               FILE_LIB.ffile = qfile;
           end-proc;
      * - ----------------------------------------------------------- *
       *  Calculo secuencia
@@ -119,13 +145,13 @@
       * graba - inserta registro en la tabla
      * - ----------------------------------------------------------- *
           dcl-proc graba ;
-               s1empr = usempr;
-               s1sucu = ussucu;
+               s1empr = uds.usempr;
+               s1sucu = uds.ussucu;
                s1marf = '0';
                s1marO = '0';
                //From
                s1ffil = %trim(qfile);
-               s1flib = flib;
+               s1flib = FILE_LIB.flib;
                //to
                s1tlib = tlib;
                s1tfil = tfil;
@@ -138,10 +164,6 @@
                                             : s1tipo
                                             : s1attr);
                s1echa = %dec(%date():*iso);
-               fech   = %dec(%date():*iso);
-               s1anio = feca;
-               s1fmes = fecm;
-               s1fdia = fecd;
                s1desa = desa;
                s1ech1 = %dec(%date():*iso);
                s1ausu = @PsDs.CurUsr;
@@ -153,8 +175,8 @@
       * grabaIns - inserta registro en la tabla
      * - ----------------------------------------------------------- *
         dcl-proc grabaIns;
-               SIEMPR = usempr;
-               SISUCU = ussucu;
+               SIEMPR = uds.usempr;
+               SISUCU = uds.ussucu;
                SIINST = desa;
                sideta = deta;
                sidate = udate;

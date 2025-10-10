@@ -1,7 +1,8 @@
-     H option(*nodebugio: *srcstmt: *noshowcpy)
-     H actgrp(*caller) dftactgrp(*no)
-     H COPYRIGHT('HDI Seguros')
-     H bnddir('INSTALADOR/HDIBDIR')
+        ctl-opt
+          actgrp(*caller)
+          bnddir('INSTALADOR/HDIBDIR')
+          option(*srcstmt: *nodebugio: *nounref: *noshowcpy)
+          datfmt(*iso) timfmt(*iso);
      * - ----------------------------------------------------------- *
      *  Sistema  .:  as400                                           *
      * ------------------------------------------------------------- *
@@ -12,16 +13,21 @@
      * - ----------------------------------------------------------- *
       *   Se llama...
      * - ----------------------------------------------------------- *
-     D INSTCOM         pr
-     D                               10
-     D                               50
-     D                                 n
-     D                                 n
-     D INSTCOM         pi
-     D DESA                          10
-     D deta                          50
-     D flaginst                        n
-     D retorno                         n
+          // Prototipo
+          dcl-pr INSTCOM;
+               DESA     char(10);
+               deta     char(50);
+               flaginst ind;
+               retorno  ind;
+          end-pr;
+
+          // Interfaz
+          dcl-pi INSTCOM;
+               DESA     char(10);
+               deta     char(50);
+               flaginst ind;
+               retorno  ind;
+          end-pi;
      * ------------------------------------------------------------- *
       *   Cuerpo Principal
      * - ----------------------------------------------------------- *

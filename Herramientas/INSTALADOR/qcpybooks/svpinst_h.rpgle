@@ -28,9 +28,9 @@
             //  Estructura para llamar al MOVSRC
             // ----------------------------------------------------
             dcl-pr MOVSRCMBRC extpgm('MOVSRCMBRC');
-            FFIL char(20);
-            TFIL char(20);
-            MBR  char(10);
+                  FFIL char(20);
+                  TFIL char(20);
+                  MBR  char(10);
             end-pr;
             // ----------------------------------------------------
             //  Generales
@@ -64,18 +64,18 @@
             // dcl-pr INSTALOBJ extpgm('OBJETOS'); end-pr;    // (comentado)
 
             dcl-pr PGGOBJETOS extpgm('PGGOBJ');
-            desa char(10);
-            secu packed(2:0);
+                  desa char(10);
+                  secu packed(2:0);
             end-pr;
 
             // ----------------------------------------------------
             //  Estructura para llamar al procinst
             // ----------------------------------------------------
             dcl-pr INSTCOMP extpgm('INSTCOM');
-            desa        char(10);
-            desc        char(50);
-            flaotipoinst ind;
-            estado       ind;
+                  desa        char(10);
+                  desc        char(50);
+                  flaotipoinst ind;
+                  estado       ind;
             end-pr;
 
             dcl-s estoyEn       char(10);
@@ -88,15 +88,15 @@
             //  FUENTESA
             // ----------------------------------------------------
             dcl-ds QFileDS;
-            qfile char(10) pos(1);
-            q     char(1)  pos(1) inz('Q');
-            file  char(9)  pos(2);
+                  qfile char(10) pos(1);
+                  q     char(1)  pos(1) inz('Q');
+                  file  char(9)  pos(2);
             end-ds;
 
             dcl-ds conf_ins;
-            tlib char(10) pos(1);
-            LIBO char(10) pos(11);
-            tfil char(10) pos(21);
+                  tlib char(10) pos(1);
+                  LIBO char(10) pos(11);
+                  tfil char(10) pos(21);
             end-ds;
 
             dcl-s @@vsys      char(512);
@@ -107,10 +107,10 @@
 
             // DS con campos superpuestos (longitudes según posiciones)
             dcl-ds Datos1 inz;
-            cadena char(100) pos(1);
-            nomfue char(10)  pos(2);
-            esws   char(2)   pos(2);
-            tipo   char(10)  pos(12);
+                  cadena char(100) pos(1);
+                  nomfue char(10)  pos(2);
+                  esws   char(2)   pos(2);
+                  tipo   char(10)  pos(12);
             end-ds;
 
             // ----------------------------------------------------

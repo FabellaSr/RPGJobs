@@ -11,71 +11,45 @@
       /copy HDIILE/qcpybooks,ceetrec_h
       /copy HDIILE/qcpybooks,getsysv_h
       /copy instalador/qcpybooks,svpcfg_H
-     * - ----------------------------------------------------------- *
-      *   Archivos
-     * - ----------------------------------------------------------- *
-
-     D Initialized     s              1N
       * ------------------------------------------------------------ *
       * svpcfg_inz(): Inicializa módulo.                             *
       *                                                              *
       * void                                                         *
       * ------------------------------------------------------------ *
-     P svpcfg_inz      B                   export
-     D svpcfg_inz      pi
-      * ------------------------------------------------------------ *
-      * SVPCALC_inz(): Inicializa módulo.                             *
-      *                                                              *
-      * void                                                         *
-      * ------------------------------------------------------------ *
-      /free
-       //if not %open(setdat);
-         //open setdat;
-       //endif;
-
-       initialized = *ON;
-       return;
-
-      /end-free
-
-     P svpcfg_inz      E
-
+        dcl-proc svpcfg_inz export;
+            dcl-pi svpcfg_inz end-pi;
+            initialized = *ON;
+            return;
+        end-proc;
       * ------------------------------------------------------------ *
       * svpcfg_End(): Finaliza módulo.                               *
       *                                                              *
       * void                                                         *
       * ------------------------------------------------------------ *
-     P svpcfg_End      B                   export
-     D svpcfg_End      pi
-      /free
-       //close *all;
-       initialized = *OFF;
-       return;
-      /end-free
-
-     P svpcfg_End      E
+        dcl-proc svpcfg_End export;
+          dcl-pi svpcfg_end end-pi;
+          //close *all;
+          initialized = *OFF;
+          return;
+        end-proc;
 
       * ------------------------------------------------------------ *
       * svpcfg_ambiente():                                           *
       *                                                              *
       * Retorna: on off.                                             *
       * ------------------------------------------------------------ *
-     P svpcfg_ambiente...
-     P                 B                   export
-     D svpcfg_ambiente...
-     D                 pi              n
-     D   pxAmbi                      10
-      /free
-        pxAmbi = rtvSysName();
-        if ( pxAmbi = *blanks );
-              pxAmbi = 'ERROR';
-              return *off;
-              CEETREC( *omit: 1 );
-        endif;
-        return *on;
-      /end-free
-     P svpcfg_ambiente...
-     P                 E
+        dcl-proc svpcfg_ambiente export;
+          dcl-pi svpcfg_ambiente ind;
+            pxAmbi char(10);
+          end-pi;
+            pxAmbi = rtvSysName();
+            if ( pxAmbi = *blanks );
+                  pxAmbi = 'ERROR';
+                  return *off;
+                  CEETREC( *omit: 1 );
+            endif;
+            return *on;
+        end-proc;
 
       /define PSYS_LOAD_PROCEDURE
       /copy hdiile/qcpybooks,psys_h
