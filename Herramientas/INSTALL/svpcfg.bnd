@@ -1,4 +1,0 @@
-STRPGMEXP SIGNATURE('SVPCFG0000000001')
- export symbol(svpcfg_End)
- export symbol(svpcfg_ambiente)
-endpgmexp

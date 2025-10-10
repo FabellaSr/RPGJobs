@@ -1,0 +1,39 @@
+     A
+      *- Nuevo esquema de presentacion de estados contables. *
+      *- Array list
+     A                                      REF(*LIBL/REFERENCIA)
+     A                                      UNIQUE
+     A          R A@TPCA
+     A            A@EMPR    R               REFFLD(EMPR)
+     A            A@SUCU    R               REFFLD(SUCU)
+     A            A@NOAJ        20A         TEXT('NOMBRE JSON')
+     A            A@NOAR        20A         TEXT('NOMBRE ARRAY')
+     A            A@NOMO        20A         TEXT('NOMBRE OBJETO')
+     A            A@NOMP        20A         TEXT('NOMBRE PROPIEDAD')
+     A            A@NROP         2  0       TEXT('NRO PROPIEDAD')
+     A            A@NROB         2  0       TEXT('NRO OBJETO')
+     A            A@TIPD    R               REFFLD(MARP)
+     A                                      COLHDG('TIPO DE DATO')
+     A            A@ULTP    R               REFFLD(MARP)
+     A                                      COLHDG('MARCA ULTIMO P.')
+     A            A@ULTA    R               REFFLD(MARP)
+     A                                      COLHDG('MARCA ULTIMO A.')
+     A            A@MAR3    R               REFFLD(MARP)
+     A                                      COLHDG('ARRAY O PROP.')
+     A            A@ULOB    R               REFFLD(MARP)
+     A                                      COLHDG('ULTIMISIMO.')
+     A            A@MAR5    R               REFFLD(MARP)
+     A            A@USER    R               REFFLD(USER)
+     A            A@DATE    R               REFFLD(DATE)
+     A            A@TIME    R               REFFLD(TIME)
+      * - -------------------------------- *
+     A          K A@EMPR
+     A          K A@SUCU
+     A          K A@NOAJ
+     A          K A@NOAR
+     A          K A@NROB
+     A          K A@NOMO
+     A          K A@NROP
+     A          K A@NOMP
+
+
