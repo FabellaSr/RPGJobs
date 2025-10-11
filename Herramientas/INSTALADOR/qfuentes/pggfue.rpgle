@@ -47,9 +47,11 @@
             setll %kds(k1tsrc:4) setsrc;
             reade %kds(k1tsrc:4) setsrc;
             dow not %eof(setsrc);
-                mueve();
-                if secu <> -1;
-                    graba();
+                if s1marf = 0;
+                    mueve();
+                    if secu <> -1;
+                        graba();
+                    endif;
                 endif;
                 reade %kds(k1tsrc:4) setsrc;
             enddo;
@@ -60,7 +62,8 @@
      * - ----------------------------------------------------------- *
         dcl-proc mueve;
             monitor;
-                callp MOVSRCMBRC(fromfile: tofile: s1nfue);
+                //callp MOVSRCMBRC(fromfile: tofile: s1nfue);
+                callp MVSRCWBKP(fromfile: tofile: s1nfue);
             on-error;
                 secu = -1;
             endmon;

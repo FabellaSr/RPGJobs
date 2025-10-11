@@ -91,10 +91,10 @@
             // *
             monitor;
                 callp QUSLMBR( SPACENAME
-                            : MBR_LIST
-                            : peLib
-                            : WHICHMBR
-                            : OVERRIDE);
+                             : MBR_LIST
+                             : peLib
+                             : WHICHMBR
+                             : OVERRIDE);
                 return *on;
               on-error;
                 return *off;
@@ -135,7 +135,7 @@
             end-pi;
             clear pxDsMbr;
             clear pxeDsCMbr;
-            count = 1;
+            count  = 1;
             endpgm = *on;
             dow endpgm;
               select;
@@ -150,7 +150,7 @@
                   leave;
               endsl;
             enddo;
-            MBRPTR = %addr(ARR(OFFSET));
+            MBRPTR    = %addr(ARR(OFFSET));
             pxeDsCMbr = size;
             eval-corr pxDsMbr = MBR0200_T;
             return endpgm;
