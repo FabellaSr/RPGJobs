@@ -3,22 +3,6 @@
       * REST:   Programa de Servicio.                                *
       *         Trabajo con REST.                                    *
       * ------------------------------------------------------------ *
-      * Sergio Fernandez                    *26-May-2017             *
-      * ------------------------------------------------------------ *
-      * Modificacion:                                                *
-      * SGF 26/10/2017 : Se agrega caracter de Escape(x'3F': '&apos) *
-      * EXT 19/07/2018 : Se agrega procedimientos:                   *
-      *                  - REST_startArray()                         *
-      *                  - REST_endArray()                           *
-      * SGF 26/06/2020 : Agrego nombre de sistema en header.         *
-      * LRG 14/08/2020 : Agrego parametros opcional de separador     *
-      *                  de campo para URI                           *
-      * SGF 26/11/2022 : writeHeader() imprime body con el error.    *
-      *                  Esto es para que ApiC lo pueda mostrar.     *
-      * SGF 22/06/2023 : _getUri() recibe si debe o no convertir a   *
-      *                  mayuscula.                                  *
-      *                                                              *
-      * ************************************************************ *
 
       /copy hdiile/qcpybooks,rest_h
       /copy hdiile/qcpybooks,cowlog_h
