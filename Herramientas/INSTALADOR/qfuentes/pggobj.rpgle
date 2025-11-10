@@ -33,30 +33,34 @@
           desa char(10);
           secu packed(2:0);
         end-pi;
-     * - ----------------------------------------------------------- *
+      // -----------------------------------------------------------
       *   Cuerpo Principal.
-     * - ----------------------------------------------------------- *
+      // -----------------------------------------------------------
       /free
         *inlr = *on;
-          k1tsrc.s1empr = usempr;
-          k1tsrc.s1sucu = ussucu;
-          k1tsrc.s1desa = desa;
-          k1tsrc.s1secu = %dec(SECU:2:0);
-          cmd = 'ADDLIBLE LIB(INSTALTEMP) POSITION(*FIRST)';
-          monitor;
-            qCmdExc( %trim(cmd) : %len(%trim(cmd)) );
-          on-error;
-            *in50 = *on;
-          endmon;
-          //chkobj();
+          inicio();
+          chkobj();
           if not bloqueado;
             muevoObj();
           else;
             ERROBJ = s1nfue;
+            secu   = 0;
             exfmt ERROBJLCK;
-            secu = 0;
           endif;
       /end-free
+     ******************************************************
+      /SPACE
+     ******************************************************
+        dcl-proc inicio;
+          k1tsrc.s1empr = usempr;
+          k1tsrc.s1sucu = ussucu;
+          k1tsrc.s1desa = desa;
+          k1tsrc.s1secu = %dec(secu:2:0);
+          obj           = s1nfue;
+          libobj        = s1objl;
+          cmd           = 'ADDLIBLE LIB(INSTALTEMP) POSITION(*FIRST)';
+          svpapi_RunCl(cmd);
+        end-proc;
      ******************************************************
       /SPACE
      ******************************************************
@@ -64,8 +68,9 @@
           setll %kds ( k1tsrc:4 ) setsrcpf ;
           reade %kds ( k1tsrc:4 ) setsrcpf ;
           dow not %eof;
-            chkobjlck();
-            if bloqueado;
+            //si hay algun obj bloqueado me voy
+            if svpapi_chkStatusObj(objlck);
+              bloqueado = *on;
               leave;
             endif;
             reade %kds ( k1tsrc:4 ) setsrcpf ;
@@ -85,23 +90,11 @@
                              : s1tlib
                              : s1tipo );
               else;
-                svpapi_movfil( s1objl
-                             : s1nfue
-                             : s1flib
-                             : s1tipo );
+                CPYPFLG( s1nfue );
               endif;
               s1maro = '1';
               update s1tsrc;
               reade %kds ( k1tsrc:4 ) setsrc ;
             enddo;
         end-proc;
-     ******************************************************
-      /SPACE
-     ******************************************************
-        dcl-proc chkobjlck;
-          obj    = s1nfue;
-          libobj = s1objl;
-          //if svpapi_chkStatusObj(objlck);
 
-         // endif;
-        end-proc;

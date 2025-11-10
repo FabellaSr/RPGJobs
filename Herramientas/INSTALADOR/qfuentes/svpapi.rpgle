@@ -8,6 +8,7 @@
       * Modificaciones:                                              *
       * ************************************************************ *
       *--- Copy H -------------------------------------------------- *
+      // /include qsysinc/qrpglesrc,qusrmbrd
       /copy instalador/qcpybooks,svpapi_H
       /copy instalador/qcpybooks,svpcfg_H
 
@@ -157,9 +158,9 @@
         end-proc;
 
       * ------------------------------------------------------------ *
-      * svpapi_chkStatusObj()                             *
-      *         recibe obj y libobj                                *
-      * Retorna: on off.                                             *
+      * svpapi_chkStatusObj()                                        *
+      *         recibe obj y libobj                                  *
+      * Retorna: on si el obj esta bloqueado off si no esta bloq     *
       * ------------------------------------------------------------ *
         dcl-proc svpapi_chkStatusObj export;
             dcl-pi svpapi_chkStatusObj ind;
@@ -177,14 +178,14 @@
                   endpgm = svpapi_chkobjlck(pxObjlck);
                   count  = 3;
                 when count  = 3;
-                  endpgm = svpapi_getPointerToTheUsrSpace(PTR);
+                  endpgm = svpapi_getPointerToTheUsrSpace(usPtr);
                   leave;
               endsl;
             enddo;
-            if userspaceHeade.nmbrEntries > 0;
+            if userspaceHeader.nmbrEntries > 0;
               stateObj = *on;
             else;
-                stateObj = *off;
+              stateObj = *off;
             endif;
             return stateObj;
         end-proc;
@@ -194,50 +195,49 @@
       * Retorna: on off.                                             *
       * ------------------------------------------------------------ *
         dcl-proc svpapi_chkobjexist export;
-            dcl-pi svpapi_chkobjexist ind;
-                  peNfue char(10);
-                  peFlib char(10);
-                  peTobj char(10);
-            end-pi;
-            dcl-s retorno ind inz(*off);
+          dcl-pi svpapi_chkobjexist ind;
+                peNfue char(10);
+                peFlib char(10);
+                peTobj char(10);
+          end-pi;
+          dcl-s retorno ind inz(*off);
 
-            dcl-ds estr;
-              todo   char(20) pos(1);
-              objeto char(10) pos(1);
-              lib    char(10) pos(11);
-            end-ds;
-            dcl-ds existe;
-              trampa char(40) pos(2);
-            end-ds;
-            count  = 1;
-            objeto = peNfue;
-            lib    = peFlib;
-            endpgm = *on;
-            dow endpgm;
-              select;
-                when count  = 1;
-                  endpgm = svpapi_spaceUsr();
-                  count  = 2;
-                when count  = 2;
-                //le mando obj y liboj
-                  QUSLOBJ( SPACENAME
-                         : CHK_OBJ
-                         : todo
-                         : peTobj
-                         : errCode );
-                  count  = 3;
-                when count  = 3;
-                  endpgm = svpapi_getPointerToTheUsrSpace(PTR);
-                  leave;
-              endsl;
-            enddo;
-            MBRPTR = %addr(ARR(OFFSET));
-            existe = %TRIM(MBR0200_T(1).MBRNAME);
-            if trampa <> *blanks;
-              retorno = *on;
-            endif;
+          dcl-ds estr;
+            todo   char(20) pos(1);
+            objeto char(10) pos(1);
+            lib    char(10) pos(11);
+          end-ds;
+          dcl-ds existe;
+            trampa char(40) pos(2);
+          end-ds;
+          count  = 1;
+          objeto = peNfue;
+          lib    = peFlib;
+          endpgm = *on;
+          dow endpgm;
+            select;
+              when count  = 1;
+                endpgm = svpapi_spaceUsr();
+                count  = 2;
+              when count  = 2;
+              //le mando obj y liboj
+                QUSLOBJ( SPACENAME
+                       : CHK_OBJ
+                       : todo
+                       : peTobj
+                       : errCode );
+                count  = 3;
+              when count  = 3;
+                endpgm = svpapi_getPointerToTheUsrSpace(PTR);
+                leave;
+            endsl;
+          enddo;
+          MBRPTR = %addr(ARR(OFFSET));
+          existe = %TRIM(MBR0200_T(1).MBRNAME);
+          if trampa <> *blanks;
+            retorno = *on;
+          endif;
           return retorno;
-
         end-proc;
       * ------------------------------------------------------------ *
       * svpapi_getTypeAndAttributeObj()                              *
@@ -245,56 +245,56 @@
       * Retorna: on off.                                             *
       * ------------------------------------------------------------ *
         dcl-proc svpapi_getTypeAndAttributeObj export;
-            dcl-pi svpapi_getTypeAndAttributeObj ind;
-                  peNfue char(10);
-                  peFlib char(10);
-                  pxTobj char(10);
-                  pxAttr char(10);
-            end-pi;
-            dcl-s retorno ind inz(*off);
-            // --- DS de 20 bytes con overlays
-            dcl-ds EstrDS inz;
-              todo   char(20);                 // base (1\Z20)
-              objeto char(10) overlay(todo:1); // 1\Z10
-              lib    char(10) overlay(todo:11);// 11\Z20
-            end-ds;
-            // --- DS de 40 bytes con overlays
-            dcl-ds ObjTypeDS inz;
-              bloque char(40);                   // base (1\Z40)
-              type   char(9)  overlay(bloque:22);// 22\Z30
-              attr   char(8)  overlay(bloque:33);// 33\Z40
-            end-ds;
-            count  = 1;
-            objeto = peNfue;
-            lib    = peFlib;
-            endpgm = *on;
-            dow endpgm;
-              select;
-                when count = 1;
-                  endpgm = svpapi_spaceUsr();
-                  count  = 2;
-                when count = 2;
-                //le mando obj y liboj
-                  QUSLOBJ( SPACENAME
-                        : CHK_OBJ2
-                        : todo
-                        : ATTRIBUTEALL
-                        : errCode );
-                  count = 3;
-                when count = 3;
-                  endpgm = svpapi_getPointerToTheUsrSpace(PTR);
-                  leave;
-              endsl;
-            enddo;
+          dcl-pi svpapi_getTypeAndAttributeObj ind;
+                peNfue char(10);
+                peFlib char(10);
+                pxTobj char(10);
+                pxAttr char(10);
+          end-pi;
+          dcl-s retorno ind inz(*off);
+          // --- DS de 20 bytes con overlays
+          dcl-ds EstrDS inz;
+            todo   char(20);                 // base (1\Z20)
+            objeto char(10) overlay(todo:1); // 1\Z10
+            lib    char(10) overlay(todo:11);// 11\Z20
+          end-ds;
+          // --- DS de 40 bytes con overlays
+          dcl-ds ObjTypeDS inz;
+            bloque char(40);                   // base (1\Z40)
+            type   char(9)  overlay(bloque:22);// 22\Z30
+            attr   char(8)  overlay(bloque:33);// 33\Z40
+          end-ds;
+          count  = 1;
+          objeto = peNfue;
+          lib    = peFlib;
+          endpgm = *on;
+          dow endpgm;
+            select;
+              when count = 1;
+                endpgm = svpapi_spaceUsr();
+                count  = 2;
+              when count = 2;
+              //le mando obj y liboj
+                QUSLOBJ( SPACENAME
+                      : CHK_OBJ2
+                      : todo
+                      : ATTRIBUTEALL
+                      : errCode );
+                count = 3;
+              when count = 3;
+                endpgm = svpapi_getPointerToTheUsrSpace(PTR);
+                leave;
+            endsl;
+          enddo;
 
-            MBRPTR = %addr(ARR(OFFSET));
-            if MBR0200_T(1).MBRNAME <> *blanks;
-              bloque  = MBR0200_T(1).MBRNAME;
-              pxTobj  = type;
-              pxAttr  = attr;
-              retorno = *on;
-            endif;
-            return retorno;
+          MBRPTR = %addr(ARR(OFFSET));
+          if MBR0200_T(1).MBRNAME <> *blanks;
+            bloque  = MBR0200_T(1).MBRNAME;
+            pxTobj  = type;
+            pxAttr  = attr;
+            retorno = *on;
+          endif;
+          return retorno;
         end-proc;
       * ------------------------------------------------------------ *
       * svpapi_chkobjlck()                                           *
@@ -302,20 +302,20 @@
       * Retorna: on off.                                             *
       * ------------------------------------------------------------ *
         dcl-proc svpapi_chkobjlck export;
-            dcl-pi svpapi_chkobjlck ind;
-                  pxObjlck like(objlock);
-            end-pi;
-            monitor;
-              callp QWCLOBJL(SPACENAME
-                            : CHK_OBJ
-                            : pxObjlck
-                            : ATTRIBUTEFILE
-                            : NONE
-                            : errCode);
-              return *on;
-            on-error;
-              return *off;
-            endmon;
+          dcl-pi svpapi_chkobjlck ind;
+                pxObjlck like(objlock);
+          end-pi;
+          monitor;
+            callp QWCLOBJL( SPACENAME
+                          : CHK_OBJ       //OBJL0100
+                          : pxObjlck
+                          : ATTRIBUTEFILE //*FILE
+                          : NONE
+                          : errCode);
+            return *on;
+          on-error;
+            return *off;
+          endmon;
         end-proc;
       * ------------------------------------------------------------ *
       * svpapi_movobj()                                              *
@@ -323,37 +323,35 @@
       * Retorna: on off.                                             *
       * ------------------------------------------------------------ *
         dcl-proc svpapi_movobj export;
-            dcl-pi svpapi_movobj ind;
-                  peObjl char(10);
-                  peNfue char(10);
-                  peFlib char(10);
-                  peTlib char(10);
-                  peTobj char(10);
-            end-pi;
-            if svpapi_chkobjexist( peNfue
-                                 : peTlib
-                                 : peTobj);
-                CMD = 'DLTOBJ OBJ('
-                    + %trim(peTlib)
-                    + '/'
-                    + %trim(peNfue)
-                    + ') OBJTYPE('
-                    + %trim(peTobj)
-                    +  ')';
-                CMDLEN = %len(%trim(CMD));
-                callp QCMDEXC(CMD: CMDLEN);
-            endif;
-                CMD = 'MOVOBJ OBJ('
-                    + %trim(peFlib)
-                    + '/'
-                    + %trim(peNfue)
-                    + ') OBJTYPE('
-                    + %trim(peTobj)
-                    + ') TOlib('
-                    + %trim(peTlib) + ')';
-                CMDLEN = %len(%trim(CMD));
-                callp QCMDEXC(CMD: CMDLEN);
-                return *on;
+          dcl-pi svpapi_movobj ind;
+                peObjl char(10);
+                peNfue char(10);
+                peFlib char(10);
+                peTlib char(10);
+                peTobj char(10);
+          end-pi;
+          if svpapi_chkobjexist( peNfue
+                               : peTlib
+                               : peTobj);
+              CMD = 'DLTOBJ OBJ('
+                  + %trim(peTlib)
+                  + '/'
+                  + %trim(peNfue)
+                  + ') OBJTYPE('
+                  + %trim(peTobj)
+                  +  ')';
+              svpapi_RunCl(CMD);
+          endif;
+          CMD = 'MOVOBJ OBJ('
+              + %trim(peFlib)
+              + '/'
+              + %trim(peNfue)
+              + ') OBJTYPE('
+              + %trim(peTobj)
+              + ') TOlib('
+              + %trim(peTlib) + ')';
+          svpapi_RunCl(CMD);
+          return *on;
         end-proc;
       * ------------------------------------------------------------ *
       * svpapi_movfil()                                              *
@@ -361,38 +359,77 @@
       * Retorna: on off.                                             *
       * ------------------------------------------------------------ *
         dcl-proc svpapi_movfil export;
-            dcl-pi svpapi_movfil ind;
-                  peObjl char(10);
-                  peNfue char(10);
-                  peFlib char(10);
-                  peTobj char(10);
-            end-pi;
+          dcl-pi svpapi_movfil ind;
+                peObjl char(10);
+                peNfue char(10);
+                peFlib char(10);
+                peTobj char(10);
+          end-pi;
+          monitor;
+            cmd = 'RPLPF FILE('
+                  + %trim(peObjl)
+                  + '/'
+                  + %trim(peNfue)
+                  + ') FROMlib('
+                  + %trim(peFlib)
+                  + ')';
+            svpapi_RunCl(CMD);
+          on-error;
             monitor;
-              cmd = 'RPLPF FILE('
-                    + %trim(peObjl)
-                    + '/'
-                    + %trim(peNfue)
-                    + ') FROMlib('
-                    + %trim(peFlib)
-                    + ')';
-              CMDLEN = %len(%trim(CMD));
-              callp QCMDEXC(CMD: CMDLEN);
+              CMD = 'MOVOBJ OBJ('
+                  + %trim(peFlib)
+                  + '/'
+                  + %trim(peNfue)
+                  + ') OBJTYPE('
+                  + %trim(peTobj)
+                  + ') TOlib('
+                  + %trim(peObjl) + ')';
+              svpapi_RunCl(CMD);
             on-error;
-              monitor;
-                CMD = 'MOVOBJ OBJ('
-                    + %trim(peFlib)
-                    + '/'
-                    + %trim(peNfue)
-                    + ') OBJTYPE('
-                    + %trim(peTobj)
-                    + ') TOlib('
-                    + %trim(peObjl) + ')';
-                CMDLEN = %len(%trim(CMD));
-                callp QCMDEXC(CMD: CMDLEN);
-              on-error;
-                return *off;
-              endmon;
-              //si hay error?
+              return *off;
             endmon;
-            return *on;
+            //si hay error?
+          endmon;
+          return *on;
+        end-proc;
+        // =================================================================
+        //  PROCEDIMIENTO EXPORT: existe miembro?
+        //  peLib  : likeds(FILE_LIB)  --> debe ser CHAR(20) FILE+LIB (10/10)
+        //  peMbr  : nombre del miembro
+        // =================================================================
+        dcl-proc svpapi_memberExists export;
+          dcl-pi svpapi_memberExists ind;
+                peLib  char(20) const;
+                peMbr  char(10)  const;
+          end-pi;
+          qualFile = peLib;
+          mbr      = peMbr;
+          QUSRMBRD( MbrDs
+                  : dsLen
+                  : format
+                  : qualFile
+                  : mbr
+                  : ovrprc
+                  : qusec);
+          if QUSEI<>' ';
+            retorno = *off;
+            msgq    ='*EXT';
+            errmsg  ='API QUSRMBRD returned error ' + QUSEI;
+          endif;
+          return retorno;
+        end-proc;
+        // =================================================================
+        //  PROCEDIMIENTO EXPORT: Ejecuta comando
+        // =================================================================
+        dcl-proc svpapi_RunCl export;
+          dcl-pi svpapi_RunCl ind;
+              pCmd  varchar(200) const;
+          end-pi;
+          monitor;
+              CMDLEN = %len(%trim(pCmd));
+              callp QCMDEXC(pCmd: CMDLEN);
+              return *on;
+          on-error;
+              return *off;
+          endmon;
         end-proc;

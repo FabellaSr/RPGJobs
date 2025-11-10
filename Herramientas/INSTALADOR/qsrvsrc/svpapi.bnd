@@ -10,4 +10,6 @@ STRPGMEXP SIGNATURE('SVPAPI0000000001')
  export symbol(svpapi_movobj)
  export symbol(svpapi_chkobjexist)
  export symbol(svpapi_getTypeAndAttributeObj)
+ export symbol(svpapi_memberExists)
+ export symbol(svpapi_RunCl)
 endpgmexp

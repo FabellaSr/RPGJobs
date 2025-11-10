@@ -27,7 +27,16 @@
                   lsav1 char(10) pos(11);
                   savl1 char(10) pos(21);
             end-ds;
-
+            // variables para logicos
+            dcl-ds conf_logicos;
+                  liblogicos char(10) pos(1);
+                  pflogico   char(10) pos(11);
+            end-ds;
+            dcl-ds conf_liblogicos;
+                  libEnd char(10) pos(1);
+                  libSrc char(10) pos(11);
+                  srcFue char(10) pos(21);
+            end-ds;
             // ----------------------------------------------------
             //  Estructura para llamar al GETSAVF
             // ----------------------------------------------------

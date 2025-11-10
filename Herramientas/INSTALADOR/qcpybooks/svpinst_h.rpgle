@@ -6,6 +6,7 @@
             // ----------------------------------------------------
             //  Archivos
             // ----------------------------------------------------
+            dcl-f logicos   usage(*input : *update : *output) keyed;
             dcl-f setsrc    usage(*input : *update : *output) keyed;
             dcl-f setins    usage(*input : *update : *output) keyed;
             dcl-f setins01  usage(*input : *update : *output)
@@ -28,6 +29,11 @@
             //  Estructura para llamar al MOVSRC
             // ----------------------------------------------------
             dcl-pr MOVSRCMBRC extpgm('MOVSRCMBRC');
+                  FFIL char(20);
+                  TFIL char(20);
+                  MBR  char(10);
+            end-pr;
+            dcl-pr MVSRCWBKP extpgm('MVSRCWBKP');
                   FFIL char(20);
                   TFIL char(20);
                   MBR  char(10);
@@ -103,7 +109,7 @@
             // dcl-s FLIB     char(10);    // (comentado como en el original)
             dcl-s tipoInst    ind inz(*off);
             dcl-s estadoInst  ind;
-            dcl-s x           int(10);
+            dcl-s x           int(10) inz(0);
 
             // DS con campos superpuestos (longitudes según posiciones)
             dcl-ds Datos1 inz;
@@ -157,4 +163,47 @@
             end-ds;
             // ---------------------------------------------------
             //  OBJETOS
-            // ----------------------------------------------------
+            // ---------------------------------------------------
+            // -----------------------------------------------------------
+            //  Remplazo de PF con logicos
+            // -----------------------------------------------------------
+            dcl-pr CPYPFLG;
+                  peNfue char(10);
+            end-pr;
+            // ---------------------------------------------------
+            //  MVSRCWBKP
+            // ---------------------------------------------------
+            // - --- Variables de trabajo --- - //
+            dcl-s fromFileM char(10);
+            dcl-s fromLib   char(10);
+            dcl-s toFileM   char(10);
+            dcl-s toLib     char(10);
+            //dcl-s mbr       char(10);
+            dcl-s ok        ind;
+
+            // - --- Helpers (prototipos) --- - //
+            dcl-pr RunCl  ind;
+                pCmd  varchar(200) const;
+            end-pr;
+
+            dcl-pr   chkMbrEnSrcpf ind;
+                pFile char(10) const;
+                pLib  char(10) const;
+                pMbr  char(10) const;
+            end-pr;
+
+            dcl-pr  chkMbr ind;
+                pFile char(10) const;
+                pLib  char(10) const;
+                pMbr  char(10) const;
+            end-pr;
+
+            dcl-pr  renombraFuentes;
+                pFile char(10) const;
+                pLib  char(10) const;
+                pMbr  char(10) const;
+            end-pr;
+            // ---------------------------------------------------
+            //  MVSRCWBKP
+            // ---------------------------------------------------
+

@@ -7,6 +7,7 @@
             // - --- ---------------------------------------------------- --- - //
             ctl-opt
             actgrp(*caller)
+            bnddir('INSTALADOR/HDIBDIR')
             option(*srcstmt: *nodebugio: *nounref: *noshowcpy)
             datfmt(*iso) timfmt(*iso);
 
@@ -21,33 +22,16 @@
             //inicio
             *inlr = *on;
             parseos();
-            if not  chkMbr(toFileM : toLib : mbr);
-                cmd = 'SNDPGMMSG MSGID(CPF9898) MSGF(QCPFMSG) '  +
-                        'MSGDTA(''' +
-                        'No existe el archivo ' + %trim(toFileM) +
-                        ' en ' + %trim(toLib) + ''') '           +
-                        'MSGTYPE(*ESCAPE)';
-                RunCl(cmd);
-                return;
-            endif;
+            //Fuente existe?
 
-            if not  chkMbr(fromFileM: fromLib : mbr);
+           // if not  chkMbr(fromFileM: fromLib : mbr);
+            if not chkMbrEnSrcpf(fromFileM : fromLib : mbr);
                 cmd = 'SNDPGMMSG MSGID(CPF9898) MSGF(QCPFMSG) '    +
                         'MSGDTA(''' +
                         'No existe el archivo ' + %trim(fromFileM) +
                         ' en ' + %trim(fromLib) + ''') '           +
                         'MSGTYPE(*ESCAPE)';
-                RunCl(cmd);
-                return;
-            endif;
-
-            if not   chkMbrEnSrcpf(fromFileM: fromLib: mbr);
-                cmd = 'SNDPGMMSG MSGID(CPF9898) MSGF(QCPFMSG) ' +
-                      'MSGDTA(''' +
-                      'No existe el miembro ' + %trim(mbr)      +
-                      ' en ' + %trim(fromFileM)                 +
-                      ' de ' + %trim(fromLib) + ''') MSGTYPE(*ESCAPE)';
-                RunCl(cmd);
+                svpapi_RunCl(cmd);
                 return;
             endif;
             // - --- Renombro existentes --- - //
@@ -64,13 +48,13 @@
                     + %trim(fromFileM) + ')' +
                     ' TOFILE(' + %trim(toLib) + '/' + %trim(toFileM) + ')' +
                     ' FROMMBR(' + %trim(mbr) + ')';
-                ok = RunCl(cmd);
+                ok = svpapi_RunCl(cmd);
                 //Si algo salio mal...
                 if not ok;
                     cmd = 'SNDPGMMSG MSGID(CPF9898) MSGF(QCPFMSG) MSGDTA(''' +
                         'Error al mover/copiar el miembro ' +
                         %trim(mbr) + ''') MSGTYPE(*ESCAPE)';
-                    RunCl(cmd);
+                    svpapi_RunCl(cmd);
                     return;
                 endif;
             end-proc;
@@ -88,33 +72,6 @@
                 toLib     = %trimr(toLib);
                 mbr       = %trimr(mbr);
             end-proc;
-            //Ejecucion de comandos
-            dcl-proc RunCl;
-                dcl-pi RunCl ind;
-                    pCmd  varchar(200) const;
-                end-pi;
-                monitor;
-                    CMDLEN = %len(%trim(pCmd));
-                    callp QCMDEXC(pCmd: CMDLEN);
-                    return *on;
-                on-error;
-                    return *off;
-                endmon;
-            end-proc;
-            // Verifica existencia de archivo *FILE
-            dcl-proc  chkMbr;
-                dcl-pi  chkMbr ind;
-                    pFile char(10) const;
-                    pLib  char(10) const;
-                    pMbr  char(10) const;
-                end-pi;
-                dcl-s cl varchar(200);
-
-                cl = 'CHKOBJ OBJ(' + %trim(pLib) + '/'
-                   + %trim(pFile) + ') OBJTYPE(*FILE)'
-                   + ' MBR('+ %trim(pMbr) +')';
-                return RunCl(cl);
-            end-proc;
             // Verifica existencia de miembro dentro de archivo
             dcl-proc   chkMbrEnSrcpf;
                 dcl-pi   chkMbrEnSrcpf ind;
@@ -122,12 +79,7 @@
                     pLib  char(10) const;
                     pMbr  char(10) const;
                 end-pi;
-                dcl-s cl varchar(200);
-
-                cl = 'CHKOBJ OBJ(' + %trim(pLib) + '/' +
-                    %trim(pFile) + ') OBJTYPE(*FILE) ' +
-                    'MBR(' + %trim(pMbr) + ')';
-                return RunCl(cl);
+                return svpapi_memberExists(pFile+plib:pMbr);
             end-proc;
             // Rota: borra MBR___; MBR__->MBR___; MBR_->MBR__; MBR->MBR_
             dcl-proc  renombraFuentes;
@@ -152,27 +104,27 @@
                 if   chkMbrEnSrcpf(pFile: pLib: m3);
                     cl = 'RMVM FILE(' + %trim(pLib) + '/' +
                         %trim(pFile) + ') MBR(' + %trim(m3) + ')';
-                    RunCl(cl);
+                    svpapi_RunCl(cl);
                 endif;
                 // Si existe MBR__ -> RNMM a MBR___
                 if   chkMbrEnSrcpf(pFile: pLib: m2);
                     cl = 'RNMM FILE(' + %trim(pLib) + '/' +
                          %trim(pFile) + ') ' + 'MBR(' + %trim(m2) +
                          ') NEWMBR(' + %trim(m3) + ')';
-                    RunCl(cl);
+                    svpapi_RunCl(cl);
                 endif;
                 // Si existe MBR_ -> RNMM a MBR__
                 if   chkMbrEnSrcpf(pFile: pLib: m1);
                     cl = 'RNMM FILE(' + %trim(pLib) + '/' +
                           %trim(pFile) + ') ' +
                          'MBR(' + %trim(m1) + ') NEWMBR(' + %trim(m2) + ')';
-                    RunCl(cl);
+                    svpapi_RunCl(cl);
                 endif;
                 // Si existe MBR -> RNMM a MBR_
                 if   chkMbrEnSrcpf(pFile: pLib: pMbr);
                     cl = 'RNMM FILE(' + %trim(pLib) + '/' +
                          %trim(pFile) + ') ' +
                          'MBR(' + %trim(pMbr) + ') NEWMBR(' + %trim(m1) + ')';
-                    RunCl(cl);
+                    svpapi_RunCl(cl);
                 endif;
             end-proc;

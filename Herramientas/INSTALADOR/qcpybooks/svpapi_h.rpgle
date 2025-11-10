@@ -64,7 +64,7 @@
 
             // Para ver objeto bloqueado (header de User Space)
             dcl-s usPtr pointer;
-            dcl-ds userspaceHeade based(usPtr) qualified;
+            dcl-ds userspaceHeader qualified based(usPtr) ;
                   userArea      char(64);
                   headerSize    int(10);
                   releaseLevel  char(4);
@@ -99,6 +99,27 @@
                   libobjet char(10) pos(11);
             end-ds;
 
+            //para validar si existe fuente
+            dcl-s mbr      char(10);
+            dcl-s retorno  ind inz(*on);
+            // - ---------------------------------------------------- - //
+            //  Para api que busca miembros
+            // - ---------------------------------------------------- - //
+            dcl-ds QUSEC inz;
+                  ec        char(516);
+                  qusbprv   int(10) overlay(ec:1)  inz(%size(QUSEC));
+                  qusbavl   int(10) overlay(ec:5)  inz(0);
+                  qusei     char(7)  overlay(ec:9);
+                  rsvd      char(1)  overlay(ec:16);
+                  msgdata   char(500) overlay(ec:17);
+            end-ds;
+            dcl-s errmsg   char(50);
+            dcl-s response char(1);
+            dcl-s msgq     char(10);
+            dcl-s dsLen    int(10) inz(%size(MbrDS));
+            dcl-s format   char(8)  inz('MBRD0200');
+            dcl-s qualFile char(20);
+            dcl-s ovrprc   char(1)  inz('0');
             // - ---------------------------------------------------- - //
             //  Para ejecutar comandos
             // - ---------------------------------------------------- - //
@@ -138,12 +159,12 @@
             end-pr;
 
             dcl-pr QWCLOBJL extpgm('QWCLOBJL');
-                  UsrSpcName char(20);
-                  FormatName char(8);
+                  UsrSpcName  char(20);
+                  FormatName  char(8);
                   QualObjName char(20);
-                  ObjType    char(10);
-                  memberName char(10);
-                  ErrorCode  char(100);
+                  ObjType     char(10);
+                  memberName  char(10);
+                  ErrorCode   char(100);
             end-pr;
 
             dcl-pr QCMDEXC extpgm('QCMDEXC');
@@ -178,6 +199,80 @@
                   errorCode char(1);
             end-pr;
 
+            dcl-pr QUSRMBRD extpgm('QSYS/QUSRMBRD');
+                  ds         char(266);
+                  dsLen      int(10);
+                  format     char(8);
+                  qualFile   char(20);
+                  member     char(10);
+                  ovrprc     char(1);
+                  errorData  likeds(QUSEC);
+            end-pr;
+
+            // Data structure returned from API QUSRMBRD (MBRD0200)
+            dcl-ds MbrDSds inz;
+                  mbrds            char(266);                            // base
+
+                  // Bytes returned / available
+                  mbrBytesRetn     uns(10) overlay(mbrds:1);
+                  mbrBytesAvail    uns(10) overlay(mbrds:5);
+
+                  // File / lib / member / attrs
+                  mbrFile          char(10) overlay(mbrds:9);
+                  mbrFileLib       char(10) overlay(mbrds:19);
+                  mbrFileMbr       char(10) overlay(mbrds:29);
+                  mbrFileAttr      char(10) overlay(mbrds:39);
+                  mbrSrcType       char(10) overlay(mbrds:49);
+
+                  // Fechas/horas (char según layout API)
+                  mbrCrtDate       char(13) overlay(mbrds:59);
+                  mbrLstSrcChg     char(13) overlay(mbrds:72);
+
+                  // Texto
+                  mbrTxtDesc       char(50) overlay(mbrds:85);
+
+                  // Flags
+                  mbrSrcF          char(1)  overlay(mbrds:135);
+                  mbrRmtF          char(1)  overlay(mbrds:136);
+                  mbrLglPhy        char(1)  overlay(mbrds:137);
+                  mbrODPshr        char(1)  overlay(mbrds:138);
+                  mbrRsv1          char(2)  overlay(mbrds:139);
+
+                  // Números/ tamaños (binario entero)
+                  mbrNbrRecsA1     int(10)  overlay(mbrds:141);
+                  mbrNbrRecsD1     int(10)  overlay(mbrds:145);
+                  mbrDtaSize       int(10)  overlay(mbrds:149);
+                  mbrAccPthSize    int(10)  overlay(mbrds:153);
+                  mbrNbrMbrAll     int(10)  overlay(mbrds:157);
+
+                  // Más fechas
+                  mbrChgDate       char(13) overlay(mbrds:161);
+                  mbrSavDate       char(13) overlay(mbrds:174);
+                  mbrRstDate       char(13) overlay(mbrds:187);
+                  mbrExpDate       char(7)  overlay(mbrds:200);
+                  mbrRsv2          char(4)  overlay(mbrds:207);
+
+                  // Contadores adicionales
+                  mbrMedPref       int(5)   overlay(mbrds:211);
+                  mbrNbrDaysUsd    int(10)  overlay(mbrds:213);
+                  mbrLstUsdDate    char(7)  overlay(mbrds:217);
+                  mbrUseRstDate    char(7)  overlay(mbrds:224);
+                  mbrRsv3          char(2)  overlay(mbrds:231);
+
+                  // Multiplicadores / offsets
+                  mbrDtaSpcSizM    int(10)  overlay(mbrds:233);
+                  mbrAccPthSizM    int(10)  overlay(mbrds:237);
+                  mbrTxtCCSID      int(10)  overlay(mbrds:241);
+                  mbr200offset     int(10)  overlay(mbrds:245);
+                  mbr200len        int(10)  overlay(mbrds:249);
+
+                  // Recuentos grandes (unsigned)
+                  mbrNbrRecsA2     uns(10)  overlay(mbrds:253);
+                  mbrNbrRecsD2     uns(10)  overlay(mbrds:257);
+
+                  mbrRsv4          char(6)  overlay(mbrds:261);
+            end-ds;
+
             // - ----------------------------------------------------------- - //
             //  Prototipos del módulo (svpap*)
             // - ----------------------------------------------------------- - //
@@ -189,6 +284,11 @@
 
             dcl-pr svpapi_listTheMembers ind;
                   peLib likeds(FILE_LIB);
+            end-pr;
+
+            dcl-pr svpapi_memberExists  ind;
+                  peLib  char(20) const;
+                  peMbr  char(10)  const;
             end-pr;
 
             dcl-pr svpapi_getPointerToTheUsrSpace ind;
@@ -239,3 +339,6 @@
                   peTobj char(10);
             end-pr;
 
+            dcl-pr svpapi_RunCl  ind;
+                  pCmd  varchar(200) const;
+            end-pr;

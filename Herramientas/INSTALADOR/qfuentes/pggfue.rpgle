@@ -1,6 +1,8 @@
-     H option(*nodebugio: *srcstmt: *noshowcpy)
-     H actgrp(*caller) dftactgrp(*no)
-     H COPYRIGHT('HDI Seguros')
+        ctl-opt
+          actgrp(*caller)
+          bnddir('INSTALADOR/HDIBDIR')
+          option(*srcstmt: *nodebugio: *nounref: *noshowcpy)
+          datfmt(*iso) timfmt(*iso);
      * - ----------------------------------------------------------- *
      *  Sistema  .:  as400                                           *
      *               Mueve los fuentes segun tabla                   *
@@ -42,12 +44,12 @@
       *   Cuerpo Principal
      * - ----------------------------------------------------------- *
         /free
-        *inlr = *on;
+            *inlr = *on;
             inicializar();
             setll %kds(k1tsrc:4) setsrc;
             reade %kds(k1tsrc:4) setsrc;
             dow not %eof(setsrc);
-                if s1marf = 0;
+                if s1marf = '0';
                     mueve();
                     if secu <> -1;
                         graba();
@@ -55,7 +57,7 @@
                 endif;
                 reade %kds(k1tsrc:4) setsrc;
             enddo;
-          return;
+            return;
         /end-free
      * ------------------------------------------------------------- *
       *   Procedimiento: mueve

@@ -8,7 +8,7 @@
      *****************************************************************
         ctl-opt
           actgrp(*caller)
-          bnddir('HDIILE/HDIBDIR')
+          bnddir('INSTALADOR/HDIBDIR')
           option(*srcstmt: *nodebugio: *nounref: *noshowcpy)
           datfmt(*iso) timfmt(*iso);
       // - ----------------------------------------------------------- - //
